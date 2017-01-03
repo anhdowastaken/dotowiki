@@ -1,0 +1,3 @@
+rootProject.name = 'dotowiki'
+
+include ':app'
