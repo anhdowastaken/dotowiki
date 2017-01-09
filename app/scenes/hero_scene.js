@@ -1,3 +1,7 @@
+/**
+ * Hero scene
+ */
+
 import React, { Component } from 'react';
 import {
   AppRegistry,
