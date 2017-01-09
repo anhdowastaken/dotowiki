@@ -41,6 +41,7 @@ class HeroScene extends Component {
         <TouchableHighlight onPress={() => this._onPressBack()}>
           <Text>Back</Text>
         </TouchableHighlight>
+        <Text>DOTOWIKI</Text>
         <Text>{this.props.hero.localized_name}</Text>
         <Image source={{uri: this.props.hero.full_quality_horizontal_portrait}} style={styles.hero_image}/>
         <ScrollView><Text>{this.props.heroes_bio[this.props.hero.short_name].bio}</Text></ScrollView>

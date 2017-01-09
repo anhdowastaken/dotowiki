@@ -95,7 +95,7 @@ class Top extends Component {
 class Content extends Component {
   constructor(props) {
     super(props);
-    this._onPressHero = this._onPressHero.bind(this);
+    this._onPressIcon = this._onPressIcon.bind(this);
     // Setup data source for ListView
     // Initialize with empty data
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -104,6 +104,8 @@ class Content extends Component {
       heroes:[],
       heroes_bio: {},
       item: [],
+      isHeroSelected: true,
+      isItemSelected: false,
     };
   }
 
@@ -175,24 +177,38 @@ class Content extends Component {
     .catch((error) => console.log(error));
   }
 
-  _onPressHero(hero) {
-    // Push HeroScene to stack of navigator with necessary data
-    this.props.navigator.push({
-      scene_id: "HeroScene",
-      heroes_bio: this.state.heroes_bio,
-      selected_hero: hero,
-    });
+  _onPressIcon(data) {
+    if (this.state.isHeroSelected == true) {
+      // Push Hero scene to stack of navigator with necessary data
+      this.props.navigator.push({
+        scene_id: "HeroScene",
+        heroes_bio: this.state.heroes_bio,
+        selected_hero: data,
+      });
+    } else if (this.state.isItemSelected == true) {
+      // Push Item scene to stack of navigator with necessary data
+      this.props.navigator.push({
+        scene_id: "ItemScene",
+        selected_item: data,
+      });
+    } else {
+
+    }
   }
 
   _onPressButtonHero() {
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
+      isHeroSelected: true,
+      isItemSelected: false,
     });
   }
 
   _onPressButtonItem() {
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(this.state.items),
+      isHeroSelected: false,
+      isItemSelected: true,
     });
   }
 
@@ -208,7 +224,7 @@ class Content extends Component {
           dataSource={this.state.dataSource}
           renderRow={(rowData) =>
             <View style={styles.hero_box}>
-              <TouchableHighlight onPress={() => this._onPressHero(rowData)}>
+              <TouchableHighlight onPress={() => this._onPressIcon(rowData)}>
                 <Image
                   source={{uri: rowData.icon}}
                   style={styles.hero_image}
