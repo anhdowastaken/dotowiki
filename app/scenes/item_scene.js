@@ -43,7 +43,7 @@ class ItemScene extends Component {
         </TouchableHighlight>
         <Text>DOTOWIKI</Text>
         <Text>{this.props.item.localized_name}</Text>
-        <Image source={{uri: this.props.item.icon}} style={styles.item_image}/>
+        <Image source={{uri: this.props.item.icon_url}} style={styles.item_image}/>
         <Text>Cost: {this.props.item.cost} gold</Text>
       </View>
     );

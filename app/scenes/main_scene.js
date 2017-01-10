@@ -58,9 +58,9 @@ const styles = StyleSheet.create({
   hero_list: {
     // flex: 1,
     // height: 300,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
+    // flexDirection: 'row',
+    // flexWrap: 'wrap',
+    // justifyContent: 'space-around',
     // overflow: 'hidden'
   },
 
@@ -110,33 +110,44 @@ class Content extends Component {
   }
 
   componentDidMount() {
-    let D2_API_KEY="CF1A4219A8407493ABAD29C0614BEE53";
-    let dota2_webapi_url="http://api.steampowered.com/IEconDOTA2_570";
-    let url = dota2_webapi_url + "/GetHeroes/v1?key=" + D2_API_KEY + "&language=en";
-    let base_image_url = "http://cdn.dota2.com/apps/dota2/images/heroes/";
+    // // Get hero list from dota 2 web api
+    // fetch(dota2_webapi_url_heroes, {method: "GET"})
+    // .then((response) => response.json())
+    // .then((data) => {
+    //   this.setState({
+    //     heroes: data.result.heroes,
+    //   });
+    //   for (hero of this.state.heroes) {
+    //     // Remove "npc_dota_hero_" from name
+    //     hero.short_name = hero.name.replace("npc_dota_hero_", "");
+    //     // Add image links for each hero
+    //     // 59x33px
+    //     hero.small_horizontal_portrait = dota2_base_image_url_heroes + hero.short_name + "_sb.png";
+    //     // 205x11px
+    //     hero.large_horizontal_portrait = dota2_base_image_url_heroes + hero.short_name + "_lg.png";
+    //     // 256x114px
+    //     hero.full_quality_horizontal_portrait = dota2_base_image_url_heroes + hero.short_name + "_full.png";
+    //     // 234x272px
+    //     hero.full_quality_vertical_portrait = dota2_base_image_url_heroes + hero.short_name + "_vert.jpg";
+    //     hero.icon = hero.small_horizontal_portrait;
+    //   }
+    //   console.log("hero list from dota 2 web api");
+    //   console.log(data);
 
-    // Get hero list from dota 2 web api
-    fetch(url, {method: "GET"})
+    //   this.setState({
+    //     dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
+    //   });
+    // })
+    // .catch((error) => console.log(error));
+
+    // Get heroes from https://dotowiki.herokuapp.com/heroes
+    fetch("https://dotowiki.herokuapp.com/heroes", {method: "GET"})
     .then((response) => response.json())
     .then((data) => {
       this.setState({
-        heroes: data.result.heroes,
+        heroes: data,
       });
-      for (hero of this.state.heroes) {
-        // Remove "npc_dota_hero_" from name
-        hero.short_name = hero.name.replace("npc_dota_hero_", "");
-        // Add image links for each hero
-        // 59x33px
-        hero.small_horizontal_portrait = base_image_url + hero.short_name + "_sb.png";
-        // 205x11px
-        hero.large_horizontal_portrait = base_image_url + hero.short_name + "_lg.png";
-        // 256x114px
-        hero.full_quality_horizontal_portrait = base_image_url + hero.short_name + "_full.png";
-        // 234x272px
-        hero.full_quality_vertical_portrait = base_image_url + hero.short_name + "_vert.jpg";
-        hero.icon = hero.small_horizontal_portrait;
-      }
-      console.log("hero list from dota 2 web api");
+      console.log("heroes from https://dotowiki.herokuapp.com/heroes");
       console.log(data);
 
       this.setState({
@@ -146,8 +157,7 @@ class Content extends Component {
     .catch((error) => console.log(error));
 
     // Get item list from dota 2 web api
-    url = dota2_webapi_url + "/GetGameItems/v1?key=" + D2_API_KEY + "&language=en";
-    fetch(url, {method: "GET"})
+    fetch(dota2_webapi_url_items, {method: "GET"})
     .then((response) => response.json())
     .then((data) => {
       this.setState({
@@ -155,26 +165,25 @@ class Content extends Component {
       });
       for (item of this.state.items) {
         item.short_name = item.name.replace("item_", "");
-        item.icon = "http://cdn.dota2.com/apps/dota2/images/items/" + item.short_name + "_lg.png";
+        item.icon_url = dota2_base_image_url_items + item.short_name + "_lg.png";
       }
       console.log("item list from dota 2 web api");
       console.log(data);
     })
     .catch((error) => console.log(error));
 
-    // Get bio of all heroes
-    url = "http://www.dota2.com/jsfeed/heropickerdata";
-    fetch(url, {method: "GET"})
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("bio of all heroes from http://www.dota2.com/jsfeed/heropickerdata");
-      console.log(data);
+    // // Get bio of all heroes
+    // fetch(jsfeed_heropickerdata_url, {method: "GET"})
+    // .then((response) => response.json())
+    // .then((data) => {
+    //   console.log("bio of all heroes from http://www.dota2.com/jsfeed/heropickerdata");
+    //   console.log(data);
 
-      this.setState({
-        heroes_bio: data,
-      });
-    })
-    .catch((error) => console.log(error));
+    //   this.setState({
+    //     heroes_bio: data,
+    //   });
+    // })
+    // .catch((error) => console.log(error));
   }
 
   _onPressIcon(data) {
@@ -182,7 +191,7 @@ class Content extends Component {
       // Push Hero scene to stack of navigator with necessary data
       this.props.navigator.push({
         scene_id: "HeroScene",
-        heroes_bio: this.state.heroes_bio,
+        // heroes_bio: this.state.heroes_bio,
         selected_hero: data,
       });
     } else if (this.state.isItemSelected == true) {
@@ -226,7 +235,7 @@ class Content extends Component {
             <View style={styles.hero_box}>
               <TouchableHighlight onPress={() => this._onPressIcon(rowData)}>
                 <Image
-                  source={{uri: rowData.icon}}
+                  source={{uri: rowData.icon_url}}
                   style={styles.hero_image}
                 />
               </TouchableHighlight>

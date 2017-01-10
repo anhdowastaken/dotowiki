@@ -15,8 +15,8 @@ import {
 
 const styles = StyleSheet.create({
   hero_image: {
-    width: 256,
-    height: 144,
+    width: 117, // Origin 234
+    height: 136, // Origin 272
   },
 });
 
@@ -36,15 +36,66 @@ class HeroScene extends Component {
   }
 
   render() {
-    return(
+    switch (this.props.hero.attributePrimary) {
+      case "DOTA_ATTRIBUTE_STRENGTH":
+      case "STRENGTH":
+        this.props.hero.attributePrimary = "STRENGTH";
+        break;
+      case "DOTA_ATTRIBUTE_AGILITY":
+      case "AGILITY":
+        this.props.hero.attributePrimary = "AGILITY";
+        break;
+      case "DOTA_ATTRIBUTE_INTELLECT":
+      case "INTELLECT":
+        this.props.hero.attributePrimary = "INTELLECT";
+        break;
+      default:
+        this.props.hero.attributePrimary = "Unknown";
+        break;
+    }
+
+    switch (this.props.hero.team) {
+      case "Good":
+      case "Radiant":
+        this.props.hero.team = "Radiant";
+        break;
+      case "Bad":
+      case "Dire":
+        this.props.hero.team = "Dire";
+        break;
+      default:
+        this.props.hero.team = "Unknown";
+        break;
+    }
+
+    return (
       <View>
         <TouchableHighlight onPress={() => this._onPressBack()}>
           <Text>Back</Text>
         </TouchableHighlight>
         <Text>DOTOWIKI</Text>
-        <Text>{this.props.hero.localized_name}</Text>
-        <Image source={{uri: this.props.hero.full_quality_horizontal_portrait}} style={styles.hero_image}/>
-        <ScrollView><Text>{this.props.heroes_bio[this.props.hero.short_name].bio}</Text></ScrollView>
+        <Text>{this.props.hero.localized_name} ({this.props.hero.team})</Text>
+        <Image source={{uri: this.props.hero.full_quality_vertical_portrait}} style={styles.hero_image}/>
+        <ScrollView>
+          <Text>Type: {this.props.hero.attributePrimary}</Text>
+          <Text>Role: {this.props.hero.role}</Text>
+          <Text>Damage: {this.props.hero.attackDamageMin}-{this.props.hero.attackDamageMax}</Text>
+          <Text>Range: {this.props.hero.attackRange}</Text>
+          <Text>Strenth: {this.props.hero.attributeBaseStrength} (+{this.props.hero.attributeStrengthGain})</Text>
+          <Text>Agility: {this.props.hero.attributeBaseAgility} (+{this.props.hero.attributeAgilityGain})</Text>
+          <Text>Intelligence: {this.props.hero.attributeBaseIntelligence} (+{this.props.hero.attributeIntelligenceGain})</Text>
+          <Text>Move speed: {this.props.hero.movementSpeed}</Text>
+          <Text>Vision (Day/Night): {this.props.hero.visionDaytimeRange}/{this.props.hero.visionNighttimeRange}</Text>
+          <Text>Abilities:</Text>
+          {
+            this.props.hero.abilities.map((ability, index) => {
+              return (
+                <Text>{ability.full_name}</Text>
+              );
+            })
+          }
+          <ScrollView><Text>{this.props.hero.bio}</Text></ScrollView>
+        </ScrollView>
       </View>
     );
   }
