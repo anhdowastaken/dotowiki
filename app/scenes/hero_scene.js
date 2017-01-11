@@ -36,38 +36,6 @@ class HeroScene extends Component {
   }
 
   render() {
-    switch (this.props.hero.attributePrimary) {
-      case "DOTA_ATTRIBUTE_STRENGTH":
-      case "STRENGTH":
-        this.props.hero.attributePrimary = "STRENGTH";
-        break;
-      case "DOTA_ATTRIBUTE_AGILITY":
-      case "AGILITY":
-        this.props.hero.attributePrimary = "AGILITY";
-        break;
-      case "DOTA_ATTRIBUTE_INTELLECT":
-      case "INTELLECT":
-        this.props.hero.attributePrimary = "INTELLECT";
-        break;
-      default:
-        this.props.hero.attributePrimary = "Unknown";
-        break;
-    }
-
-    switch (this.props.hero.team) {
-      case "Good":
-      case "Radiant":
-        this.props.hero.team = "Radiant";
-        break;
-      case "Bad":
-      case "Dire":
-        this.props.hero.team = "Dire";
-        break;
-      default:
-        this.props.hero.team = "Unknown";
-        break;
-    }
-
     return (
       <View>
         <TouchableHighlight onPress={() => this._onPressBack()}>
@@ -90,11 +58,11 @@ class HeroScene extends Component {
           {
             this.props.hero.abilities.map((ability, index) => {
               return (
-                <Text>{ability.full_name}</Text>
+                <Text key={ability.id}>{ability.full_name}</Text>
               );
             })
           }
-          <ScrollView><Text>{this.props.hero.bio}</Text></ScrollView>
+          <ScrollView><Text>{this.props.hero.lore}</Text></ScrollView>
         </ScrollView>
       </View>
     );
