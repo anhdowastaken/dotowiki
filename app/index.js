@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   Navigator,
+  BackAndroid,
 } from 'react-native';
 
 D2_API_KEY="CF1A4219A8407493ABAD29C0614BEE53";
@@ -28,6 +29,7 @@ dotabuff_items_url = "https://raw.githubusercontent.com/dotabuff/d2vpkr/master/d
 var MainScene = require("./scenes/main_scene.js");
 var HeroScene = require("./scenes/hero_scene.js");
 var ItemScene = require("./scenes/item_scene.js");
+var _navigator;
 
 export default class dotowiki extends Component {
   navigatorRenderScene(route, navigator) {
@@ -60,5 +62,16 @@ export default class dotowiki extends Component {
     );
   }
 }
+
+// Handle "Back" button of Android
+BackAndroid.addEventListener('hardwareBackPress', () => {
+  // Exit when we're in main scene
+  if (_navigator.getCurrentRoutes().length === 1) {
+     return false;
+  }
+  // Pop current scene out of stack
+  _navigator.pop();
+  return true;
+});
 
 AppRegistry.registerComponent('dotowiki', () => dotowiki);

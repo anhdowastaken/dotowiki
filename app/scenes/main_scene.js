@@ -19,6 +19,7 @@ import {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 3,
     backgroundColor: '#F5FCFF',
   },
 
@@ -55,28 +56,35 @@ const styles = StyleSheet.create({
   },
 
   // Show hero list in grid
-  hero_list: {
+  item_list: {
     // flex: 1,
+    padding: 12,
     // height: 300,
     // flexDirection: 'row',
+    // alignItems: 'center',
     // flexWrap: 'wrap',
     // justifyContent: 'space-around',
     // overflow: 'hidden'
   },
 
-  hero_box: {
-    width: 59,
+  item_box: {
+    // width: 59,
     height: 33,
-    backgroundColor: 'red',
+    // backgroundColor: 'red',
     margin: 3,
     // alignItems: 'stretch',
+    flexDirection: 'row',
   },
 
-  hero_image: {
+  item_image: {
     // flex: 1,
     width: 59,
     height: 33
   },
+
+  item_text: {
+    padding: 3,
+  }
 });
 
 // NOTE: All React components must start with a upper case letter, or contain a dot.
@@ -229,15 +237,18 @@ class Content extends Component {
           <TouchableHighlight onPress={() => this._onPressButtonItem()}><Text>Item</Text></TouchableHighlight>
         </View>
         <ListView
-          contentContainerStyle={styles.hero_list}
+          contentContainerStyle={styles.item_list}
           dataSource={this.state.dataSource}
           renderRow={(rowData) =>
-            <View style={styles.hero_box}>
+            <View style={styles.item_box}>
               <TouchableHighlight onPress={() => this._onPressIcon(rowData)}>
                 <Image
                   source={{uri: rowData.icon_url}}
-                  style={styles.hero_image}
+                  style={styles.item_image}
                 />
+              </TouchableHighlight>
+              <TouchableHighlight onPress={() => this._onPressIcon(rowData)}>
+                <Text style={styles.item_text}>{rowData.localized_name}</Text>
               </TouchableHighlight>
             </View>
           }
@@ -265,7 +276,7 @@ class MainScene extends Component {
       <View style={styles.container}>
         <Top/>
         <Content navigator={this.props.navigator}/>
-        <Bottom/>
+        {/*<Bottom/>*/}
       </View>
     )
   }
