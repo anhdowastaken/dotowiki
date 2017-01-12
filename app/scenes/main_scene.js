@@ -14,6 +14,7 @@ import {
   Image,
   Alert,
   Navigator,
+  AsyncStorage,
 } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -118,80 +119,73 @@ class Content extends Component {
   }
 
   componentDidMount() {
-    // // Get hero list from dota 2 web api
-    // fetch(dota2_webapi_url_heroes, {method: "GET"})
-    // .then((response) => response.json())
-    // .then((data) => {
-    //   this.setState({
-    //     heroes: data.result.heroes,
-    //   });
-    //   for (hero of this.state.heroes) {
-    //     // Remove "npc_dota_hero_" from name
-    //     hero.short_name = hero.name.replace("npc_dota_hero_", "");
-    //     // Add image links for each hero
-    //     // 59x33px
-    //     hero.small_horizontal_portrait = dota2_base_image_url_heroes + hero.short_name + "_sb.png";
-    //     // 205x11px
-    //     hero.large_horizontal_portrait = dota2_base_image_url_heroes + hero.short_name + "_lg.png";
-    //     // 256x114px
-    //     hero.full_quality_horizontal_portrait = dota2_base_image_url_heroes + hero.short_name + "_full.png";
-    //     // 234x272px
-    //     hero.full_quality_vertical_portrait = dota2_base_image_url_heroes + hero.short_name + "_vert.jpg";
-    //     hero.icon = hero.small_horizontal_portrait;
-    //   }
-    //   console.log("hero list from dota 2 web api");
-    //   console.log(data);
-
-    //   this.setState({
-    //     dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
-    //   });
-    // })
-    // .catch((error) => console.log(error));
-
     // Get heroes from https://dotowiki.herokuapp.com/heroes
-    fetch("https://dotowiki.herokuapp.com/heroes", {method: "GET"})
-    .then((response) => response.json())
-    .then((data) => {
-      this.setState({
-        heroes: data,
+    try {
+      const data = AsyncStorage.getItem("dotowiki_heroes.json")
+      .then((response) => {
+        if (response) {
+          data = JSON.parse(response);
+          console.log(data);
+          // Avoid empty data
+          if (data === "") {
+            Alert.alert("No heroes data! Please download again!");
+            data = [];
+          }
+          this.setState({
+            heroes: data,
+          });
+          this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
+          });
+        } else {
+          Alert.alert("No heroes data! Please download again!");
+        }
       });
-      console.log("heroes from https://dotowiki.herokuapp.com/heroes");
-      console.log(data);
-
+    } catch (error) {
+      // Error retrieving data
+      console.log(error);
+      Alert.alert("Incorrect heroes data! Please download again!");
+      this.setState({
+        heroes: [],
+      });
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
       });
-    })
-    .catch((error) => console.log(error));
+    }
 
-    // Get item list from dota 2 web api
-    fetch(dota2_webapi_url_items, {method: "GET"})
-    .then((response) => response.json())
-    .then((data) => {
-      this.setState({
-        items: data.result.items,
+    // Get items from https://dotowiki.herokuapp.com/dotowiki_items.json
+    try {
+      const data = AsyncStorage.getItem("dotowiki_items.json")
+      .then((response) => {
+        if (response) {
+          data = JSON.parse(response);
+          console.log(data);
+          // Avoid empty data
+          if (data === "") {
+            Alert.alert("No items data! Please download again!");
+            data = [];
+          }
+          this.setState({
+            items: data,
+          });
+          // this.setState({
+          //   dataSource: this.state.dataSource.cloneWithRows(this.state.items),
+          // });
+        } else {
+          Alert.alert("No items data! Please download again!");
+        }
       });
-      for (item of this.state.items) {
-        item.short_name = item.name.replace("item_", "");
-        item.icon_url = dota2_base_image_url_items + item.short_name + "_lg.png";
-      }
-      console.log("item list from dota 2 web api");
-      console.log(data);
-    })
-    .catch((error) => console.log(error));
-
-    // // Get bio of all heroes
-    // fetch(jsfeed_heropickerdata_url, {method: "GET"})
-    // .then((response) => response.json())
-    // .then((data) => {
-    //   console.log("bio of all heroes from http://www.dota2.com/jsfeed/heropickerdata");
-    //   console.log(data);
-
-    //   this.setState({
-    //     heroes_bio: data,
-    //   });
-    // })
-    // .catch((error) => console.log(error));
+    } catch (error) {
+      // Error retrieving data
+      console.log(error);
+      Alert.alert("Incorrect items data! Please download again!");
+      this.setState({
+        items: [],
+      });
+      // this.setState({
+      //   dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
+      // });
+    }
   }
 
   _onPressIcon(data) {
@@ -229,9 +223,60 @@ class Content extends Component {
     });
   }
 
+  _onPressButtonDownload() {
+    console.log("Downloading heroes data from https://dotowiki.herokuapp.com/dotowiki_heroes.json");
+    try {
+      fetch("https://dotowiki.herokuapp.com/dotowiki_heroes.json", {method: "GET"})
+      .then((response) => response.json())
+      .then((data) => {
+        Alert.alert("Downloading heroes is done!");
+        this.setState({
+          heroes: data,
+        });
+        console.log(data);
+
+        AsyncStorage.setItem("dotowiki_heroes.json", JSON.stringify(data));
+
+        this.setState({
+          dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
+        });
+      })
+      .catch((error) => console.log(error));
+    } catch (error) {
+      Alert.alert("Downloading heroes is failed!");
+      console.log(error);
+    }
+
+    console.log("Downloading items from https://dotowiki.herokuapp.com/dotowiki_items.json");
+    try {
+      fetch("https://dotowiki.herokuapp.com/dotowiki_items.json", {method: "GET"})
+      .then((response) => response.json())
+      .then((data) => {
+        Alert.alert("Downloading items is done!");
+        this.setState({
+          items: data,
+        });
+        console.log(data);
+
+        AsyncStorage.setItem("dotowiki_items.json", JSON.stringify(data));
+
+        // this.setState({
+        //   dataSource: this.state.dataSource.cloneWithRows(this.state.items),
+        // });
+      })
+      .catch((error) => console.log(error));
+    } catch (error) {
+      Alert.alert("Downloading items is failed!");
+      console.log(error);
+    }
+  }
+
   render() {
     return (
       <View style={styles.content}>
+        <TouchableHighlight onPress={() => this._onPressButtonDownload()}>
+          <Text style={{textAlign: "center"}}>Download data</Text>
+        </TouchableHighlight>
         <View style={styles.content_navigation}>
           <TouchableHighlight onPress={() => this._onPressButtonHero()}><Text>Hero</Text></TouchableHighlight>
           <TouchableHighlight onPress={() => this._onPressButtonItem()}><Text>Item</Text></TouchableHighlight>
@@ -239,18 +284,27 @@ class Content extends Component {
         <ListView
           contentContainerStyle={styles.item_list}
           dataSource={this.state.dataSource}
-          renderRow={(rowData) =>
-            <View style={styles.item_box}>
-              <TouchableHighlight onPress={() => this._onPressIcon(rowData)}>
-                <Image
-                  source={{uri: rowData.icon_url}}
-                  style={styles.item_image}
-                />
-              </TouchableHighlight>
-              <TouchableHighlight onPress={() => this._onPressIcon(rowData)}>
-                <Text style={styles.item_text}>{rowData.localized_name}</Text>
-              </TouchableHighlight>
-            </View>
+          renderRow={(rowData) => {
+              // Only render heroes and items whose cost is greater than 0 (no need recipe)
+              if (Number(rowData.cost) > 0 || rowData.cost === undefined) {
+                return (
+                  <View style={styles.item_box}>
+                    <TouchableHighlight onPress={() => this._onPressIcon(rowData)}>
+                      <Image
+                        source={{uri: rowData.icon_url}}
+                        style={styles.item_image}
+                      />
+                    </TouchableHighlight>
+                    <TouchableHighlight onPress={() => this._onPressIcon(rowData)}>
+                      <Text style={styles.item_text}>{rowData.localized_name}</Text>
+                    </TouchableHighlight>
+                  </View>
+                );
+              } else {
+                // Render empty element
+                return (<View></View>);
+              }
+            }
           }
         />
       </View>

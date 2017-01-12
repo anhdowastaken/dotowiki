@@ -45,6 +45,10 @@ class ItemScene extends Component {
         <Text>{this.props.item.localized_name}</Text>
         <Image source={{uri: this.props.item.icon_url}} style={styles.item_image}/>
         <Text>Cost: {this.props.item.cost} gold</Text>
+        <Text>Description: {this.props.item.description}</Text>
+        <Text>Attribute: {this.props.item.attribute}</Text>
+        <Text>Notes: {this.props.item.notes}</Text>
+        <Text>Lore: {this.props.item.lore}</Text>
       </View>
     );
   }
