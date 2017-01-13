@@ -26,6 +26,7 @@ dotabuff_heroes_url = "https://raw.githubusercontent.com/dotabuff/d2vpkr/master/
 dotabuff_abilities_url = "https://raw.githubusercontent.com/dotabuff/d2vpkr/master/dota/scripts/npc/npc_abilities.json";
 dotabuff_items_url = "https://raw.githubusercontent.com/dotabuff/d2vpkr/master/dota/scripts/npc/items.json";
 
+var StartingScene = require("./scenes/starting_scene.js");
 var MainScene = require("./scenes/main_scene.js");
 var HeroScene = require("./scenes/hero_scene.js");
 var ItemScene = require("./scenes/item_scene.js");
@@ -36,6 +37,8 @@ export default class dotowiki extends Component {
     _navigator = navigator;
 
     switch (route.scene_id) {
+      case "StartingScene":
+        return (<StartingScene navigator={navigator}/>);
       case "MainScene":
         return (<MainScene navigator={navigator}/>);
       case "HeroScene":
@@ -56,7 +59,7 @@ export default class dotowiki extends Component {
     return (
       // NOTE: React element has to return only one element. You'll have to wrap both of your tags with another element tag.
       <Navigator
-        initialRoute={{ scene_id: "MainScene" }}
+        initialRoute={{ scene_id: "StartingScene" }}
         renderScene={ this.navigatorRenderScene }
       />
     );

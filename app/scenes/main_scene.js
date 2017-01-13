@@ -15,6 +15,9 @@ import {
   Alert,
   Navigator,
   AsyncStorage,
+  ActivityIndicator,
+  Modal,
+  Button,
 } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -109,6 +112,7 @@ class Content extends Component {
     // Initialize with empty data
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
+      modalVisisble: false,
       dataSource: ds.cloneWithRows([]),
       heroes:[],
       heroes_bio: {},
@@ -224,6 +228,12 @@ class Content extends Component {
   }
 
   _onPressButtonDownload() {
+    var counter = 2;
+
+    this.setState({
+      modalVisisble: true
+    });
+
     console.log("Downloading heroes data from https://dotowiki.herokuapp.com/dotowiki_heroes.json");
     try {
       fetch("https://dotowiki.herokuapp.com/dotowiki_heroes.json", {method: "GET"})
@@ -240,6 +250,13 @@ class Content extends Component {
         this.setState({
           dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
         });
+
+        counter--;
+        if (counter === 0) {
+          this.setState({
+            modalVisisble: false
+          });
+        }
       })
       .catch((error) => console.log(error));
     } catch (error) {
@@ -263,6 +280,12 @@ class Content extends Component {
         // this.setState({
         //   dataSource: this.state.dataSource.cloneWithRows(this.state.items),
         // });
+        counter--;
+        if (counter === 0) {
+          this.setState({
+            modalVisisble: false
+          });
+        }
       })
       .catch((error) => console.log(error));
     } catch (error) {
@@ -274,9 +297,32 @@ class Content extends Component {
   render() {
     return (
       <View style={styles.content}>
-        <TouchableHighlight onPress={() => this._onPressButtonDownload()}>
-          <Text style={{textAlign: "center"}}>Download data</Text>
-        </TouchableHighlight>
+        <Modal
+          animationType = {"fade"}
+          transparent = {false}
+          visible = {this.state.modalVisisble}
+          onRequestClose={() => {
+              this.setState({
+                modalVisisble: false
+              });
+            }
+          }
+        >
+          <View style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+            <Text style={{textAlign: 'center'}}>Downloading...</Text>
+            <ActivityIndicator
+              animating={true}
+              size="small"
+            />
+          </View>
+        </Modal>
+        <Button
+          title="Download data"
+          onPress={() => this._onPressButtonDownload()}
+        />
         <View style={styles.content_navigation}>
           <TouchableHighlight onPress={() => this._onPressButtonHero()}><Text>Hero</Text></TouchableHighlight>
           <TouchableHighlight onPress={() => this._onPressButtonItem()}><Text>Item</Text></TouchableHighlight>

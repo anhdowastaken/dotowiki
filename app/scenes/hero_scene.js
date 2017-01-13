@@ -54,12 +54,8 @@ const styles = StyleSheet.create({
     padding: 3,
   },
 
-  content_hero_abilities: {
+  content_hero_abilities_and_lore: {
     flex: 3,
-  },
-
-  content_hero_lore: {
-    flex: 1,
   },
 });
 
@@ -103,18 +99,17 @@ class HeroScene extends Component {
               <Text>Vision (Day/Night): {this.props.hero.visionDaytimeRange}/{this.props.hero.visionNighttimeRange}</Text>
             </View>
           </View>
-          <View style={styles.content_hero_abilities}>
-            <Text>Abilities:</Text>
-            {
-              this.props.hero.abilities.map((ability, index) => {
-                return (
-                  <Text key={ability.id}>{ability.full_name}</Text>
-                );
-              })
-            }
-          </View>
-          <View style={styles.content_hero_lore}>
+          <View style={styles.content_hero_abilities_and_lore}>
             <ScrollView>
+              <Text>Abilities:</Text>
+              {
+                this.props.hero.abilities.map((ability, index) => {
+                  return (
+                    <Text key={ability.id}>{ability.full_name}</Text>
+                  );
+                })
+              }
+              <Text>Lore:</Text>
               <Text>{this.props.hero.lore}</Text>
             </ScrollView>
           </View>
