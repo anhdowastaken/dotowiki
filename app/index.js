@@ -40,10 +40,12 @@ export default class dotowiki extends Component {
       case "StartingScene":
         return (<StartingScene navigator={navigator}/>);
       case "MainScene":
-        return (<MainScene navigator={navigator}/>);
+        return (<MainScene navigator={navigator}
+          heroes={route.heroes}
+          items={route.items}
+          />);
       case "HeroScene":
         return (<HeroScene navigator={navigator}
-          heroes_bio={route.heroes_bio}
           hero={route.selected_hero}/>
         );
       case "ItemScene":

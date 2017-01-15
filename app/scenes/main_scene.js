@@ -10,6 +10,7 @@ import {
   TextInput,
   TouchableHighlight,
   View,
+  ScrollView,
   ListView,
   Image,
   Alert,
@@ -18,6 +19,7 @@ import {
   ActivityIndicator,
   Modal,
   Button,
+  ViewPagerAndroid,
 } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -107,13 +109,16 @@ class Top extends Component {
 class Content extends Component {
   constructor(props) {
     super(props);
-    this._onPressIcon = this._onPressIcon.bind(this);
     // Setup data source for ListView
     // Initialize with empty data
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
+    this._onPressIcon = this._onPressIcon.bind(this);
     this.state = {
       modalVisisble: false,
       dataSource: ds.cloneWithRows([]),
+      dataSourceHeroes: ds.cloneWithRows(this.props.heroes),
+      dataSourceItems: ds.cloneWithRows(this.props.items),
       heroes:[],
       heroes_bio: {},
       item: [],
@@ -123,73 +128,73 @@ class Content extends Component {
   }
 
   componentDidMount() {
-    // Get heroes from https://dotowiki.herokuapp.com/heroes
-    try {
-      const data = AsyncStorage.getItem("dotowiki_heroes.json")
-      .then((response) => {
-        if (response) {
-          data = JSON.parse(response);
-          console.log(data);
-          // Avoid empty data
-          if (data === "") {
-            Alert.alert("No heroes data! Please download again!");
-            data = [];
-          }
-          this.setState({
-            heroes: data,
-          });
-          this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
-          });
-        } else {
-          Alert.alert("No heroes data! Please download again!");
-        }
-      });
-    } catch (error) {
-      // Error retrieving data
-      console.log(error);
-      Alert.alert("Incorrect heroes data! Please download again!");
-      this.setState({
-        heroes: [],
-      });
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
-      });
-    }
+    // // Get heroes from https://dotowiki.herokuapp.com/heroes
+    // try {
+    //   const data = AsyncStorage.getItem("dotowiki_heroes.json")
+    //   .then((response) => {
+    //     if (response) {
+    //       data = JSON.parse(response);
+    //       console.log(data);
+    //       // Avoid empty data
+    //       if (data === "") {
+    //         Alert.alert("No heroes data! Please download again!");
+    //         data = [];
+    //       }
+    //       this.setState({
+    //         heroes: data,
+    //       });
+    //       this.setState({
+    //         dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
+    //       });
+    //     } else {
+    //       Alert.alert("No heroes data! Please download again!");
+    //     }
+    //   });
+    // } catch (error) {
+    //   // Error retrieving data
+    //   console.log(error);
+    //   Alert.alert("Incorrect heroes data! Please download again!");
+    //   this.setState({
+    //     heroes: [],
+    //   });
+    //   this.setState({
+    //     dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
+    //   });
+    // }
 
-    // Get items from https://dotowiki.herokuapp.com/dotowiki_items.json
-    try {
-      const data = AsyncStorage.getItem("dotowiki_items.json")
-      .then((response) => {
-        if (response) {
-          data = JSON.parse(response);
-          console.log(data);
-          // Avoid empty data
-          if (data === "") {
-            Alert.alert("No items data! Please download again!");
-            data = [];
-          }
-          this.setState({
-            items: data,
-          });
-          // this.setState({
-          //   dataSource: this.state.dataSource.cloneWithRows(this.state.items),
-          // });
-        } else {
-          Alert.alert("No items data! Please download again!");
-        }
-      });
-    } catch (error) {
-      // Error retrieving data
-      console.log(error);
-      Alert.alert("Incorrect items data! Please download again!");
-      this.setState({
-        items: [],
-      });
-      // this.setState({
-      //   dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
-      // });
-    }
+    // // Get items from https://dotowiki.herokuapp.com/dotowiki_items.json
+    // try {
+    //   const data = AsyncStorage.getItem("dotowiki_items.json")
+    //   .then((response) => {
+    //     if (response) {
+    //       data = JSON.parse(response);
+    //       console.log(data);
+    //       // Avoid empty data
+    //       if (data === "") {
+    //         Alert.alert("No items data! Please download again!");
+    //         data = [];
+    //       }
+    //       this.setState({
+    //         items: data,
+    //       });
+    //       // this.setState({
+    //       //   dataSource: this.state.dataSource.cloneWithRows(this.state.items),
+    //       // });
+    //     } else {
+    //       Alert.alert("No items data! Please download again!");
+    //     }
+    //   });
+    // } catch (error) {
+    //   // Error retrieving data
+    //   console.log(error);
+    //   Alert.alert("Incorrect items data! Please download again!");
+    //   this.setState({
+    //     items: [],
+    //   });
+    //   // this.setState({
+    //   //   dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
+    //   // });
+    // }
   }
 
   _onPressIcon(data) {
@@ -211,20 +216,39 @@ class Content extends Component {
     }
   }
 
-  _onPressButtonHero() {
-    this.setState({
-      dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
-      isHeroSelected: true,
-      isItemSelected: false,
+  _onPressIconHero(data) {
+    // Push Hero scene to stack of navigator with necessary data
+    this.props.navigator.push({
+      scene_id: "HeroScene",
+      // heroes_bio: this.state.heroes_bio,
+      selected_hero: data,
     });
   }
 
-  _onPressButtonItem() {
-    this.setState({
-      dataSource: this.state.dataSource.cloneWithRows(this.state.items),
-      isHeroSelected: false,
-      isItemSelected: true,
+  _onPressIconItem(data) {
+    // Push Item scene to stack of navigator with necessary data
+    this.props.navigator.push({
+      scene_id: "ItemScene",
+      selected_item: data,
     });
+  }
+
+  _onPressButtonHero() {
+    this.viewPager.setPage(0);
+    // this.setState({
+    //   dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
+    //   isHeroSelected: true,
+    //   isItemSelected: false,
+    // });
+  }
+
+  _onPressButtonItem() {
+    this.viewPager.setPage(1);
+    // this.setState({
+    //   dataSource: this.state.dataSource.cloneWithRows(this.state.items),
+    //   isHeroSelected: false,
+    //   isItemSelected: true,
+    // });
   }
 
   _onPressButtonDownload() {
@@ -319,15 +343,15 @@ class Content extends Component {
             />
           </View>
         </Modal>
-        <Button
+{/*        <Button
           title="Download data"
           onPress={() => this._onPressButtonDownload()}
-        />
+        />*/}
         <View style={styles.content_navigation}>
           <TouchableHighlight onPress={() => this._onPressButtonHero()}><Text>Hero</Text></TouchableHighlight>
           <TouchableHighlight onPress={() => this._onPressButtonItem()}><Text>Item</Text></TouchableHighlight>
         </View>
-        <ListView
+{/*        <ListView
           contentContainerStyle={styles.item_list}
           dataSource={this.state.dataSource}
           renderRow={(rowData) => {
@@ -352,7 +376,59 @@ class Content extends Component {
               }
             }
           }
-        />
+        />*/}
+        <ViewPagerAndroid
+          style={{flex: 1}}
+          ref={(viewPager) => {this.viewPager = viewPager;}}
+        >
+          <View>
+            <ScrollView>
+              {
+                this.props.heroes.map((hero, index) => {
+                  return (
+                    <View key={hero.short_name} style={styles.item_box}>
+                      <TouchableHighlight onPress={() => this._onPressIconHero(hero)}>
+                        <Image
+                          source={{uri: hero.icon_url}}
+                          style={styles.item_image}
+                        />
+                      </TouchableHighlight>
+                      <TouchableHighlight onPress={() => this._onPressIconHero(hero)}>
+                        <Text style={styles.item_text}>{hero.localized_name}</Text>
+                      </TouchableHighlight>
+                    </View>
+                  );
+                })
+              }
+            </ScrollView>
+          </View>
+          <View>
+            <ScrollView>
+              {
+                this.props.items.map((item, index) => {
+                  // Only render items whose cost is greater than 0 (no need recipe)
+                  if (Number(item.cost) > 0 || item.cost === undefined) {
+                    return (
+                      <View key={item.short_name} style={styles.item_box}>
+                        <TouchableHighlight onPress={() => this._onPressIconItem(item)}>
+                          <Image
+                            source={{uri: item.icon_url}}
+                            style={styles.item_image}
+                          />
+                        </TouchableHighlight>
+                        <TouchableHighlight onPress={() => this._onPressIconItem(item)}>
+                          <Text style={styles.item_text}>{item.localized_name}</Text>
+                        </TouchableHighlight>
+                      </View>
+                    );
+                  } else {
+                    return(<View key={item.short_name}></View>);
+                  }
+                })
+              }
+            </ScrollView>
+          </View>
+        </ViewPagerAndroid>
       </View>
     );
   }
@@ -375,7 +451,11 @@ class MainScene extends Component {
     return (
       <View style={styles.container}>
         <Top/>
-        <Content navigator={this.props.navigator}/>
+        <Content
+          navigator={this.props.navigator}
+          heroes={this.props.heroes}
+          items={this.props.items}
+        />
         {/*<Bottom/>*/}
       </View>
     )

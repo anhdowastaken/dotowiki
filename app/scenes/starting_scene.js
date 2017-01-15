@@ -46,11 +46,13 @@ class StartingScene extends Component {
 
   _onPressNoButton() {
     // TODO: Only work with Android
-    BackAndroid.exitApp();
+    // BackAndroid.exitApp();
   }
 
   _onPressYesButton() {
     var counter = 2;
+    var heroes = [];
+    var items = [];
 
     // Show downloading activity indicator
     this.setState({
@@ -66,16 +68,21 @@ class StartingScene extends Component {
         // this.setState({
         //   heroes: data,
         // });
-        console.log(data);
+        // console.log(data);
+        heroes = data;
 
-        AsyncStorage.setItem("dotowiki_heroes.json", JSON.stringify(data));
+        AsyncStorage.setItem("dotowiki_heroes.json", JSON.stringify(heroes));
         counter--;
         if (counter === 0) {
           // Alert.alert("Move to MainScene!");
           this.setState({
             downloadAnimating: false
           });
-          this.props.navigator.replace({scene_id: "MainScene"});
+          this.props.navigator.replace({
+            scene_id: "MainScene",
+            heroes: heroes,
+            items: items
+          });
         }
 
         // this.setState({
@@ -97,16 +104,21 @@ class StartingScene extends Component {
         // this.setState({
         //   items: data,
         // });
-        console.log(data);
+        // console.log(data);
+        items = data;
 
-        AsyncStorage.setItem("dotowiki_items.json", JSON.stringify(data));
+        AsyncStorage.setItem("dotowiki_items.json", JSON.stringify(items));
         counter--;
         if (counter === 0) {
           // Alert.alert("Move to MainScene!");
           this.setState({
             downloadAnimating: false
           });
-          this.props.navigator.replace({scene_id: "MainScene"});
+          this.props.navigator.replace({
+            scene_id: "MainScene",
+            heroes: heroes,
+            items: items
+          });
         }
 
         // this.setState({
@@ -123,6 +135,8 @@ class StartingScene extends Component {
   componentDidMount() {
     var didDataExisted = true;
     var counter = 2;
+    var heroes = [];
+    var items = [];
 
     // Check data existing or not
     try {
@@ -133,6 +147,7 @@ class StartingScene extends Component {
           didDataExisted = false;
         } else {
           var data = JSON.parse(response);
+          heroes = data;
           if (data === [] || data === "") {
             console.log("Heroes data is empty");
             didDataExisted = false;
@@ -142,7 +157,11 @@ class StartingScene extends Component {
         counter--;
         if (counter === 0) {
           if (didDataExisted === true) {
-            this.props.navigator.replace({scene_id: "MainScene"});
+            this.props.navigator.push({
+              scene_id: "MainScene",
+              heroes: heroes,
+              items: items
+            });
           } else {
             Alert.alert(
               'DOTOWIKI',
@@ -173,6 +192,7 @@ class StartingScene extends Component {
           didDataExisted = false;
         } else {
           var data = JSON.parse(response);
+          items = data;
           if (data === [] || data === "") {
             console.log("Items data is empty");
             didDataExisted = false;
@@ -182,7 +202,11 @@ class StartingScene extends Component {
         counter--;
         if (counter === 0) {
           if (didDataExisted === true) {
-            this.props.navigator.replace({scene_id: "MainScene"});
+            this.props.navigator.push({
+              scene_id: "MainScene",
+              heroes: heroes,
+              items: items
+            });
           } else {
             this.setState({
               downloadAnimating: false
