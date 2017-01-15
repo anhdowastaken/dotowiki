@@ -114,14 +114,18 @@ class Content extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
     this._onPressIcon = this._onPressIcon.bind(this);
+    this._onPressIconHero = this._onPressIconHero.bind(this);
+    this._onPressIconItem = this._onPressIconItem.bind(this);
     this.state = {
       modalVisisble: false,
-      dataSource: ds.cloneWithRows([]),
-      dataSourceHeroes: ds.cloneWithRows(this.props.heroes),
-      dataSourceItems: ds.cloneWithRows(this.props.items),
-      heroes:[],
-      heroes_bio: {},
-      item: [],
+      // dataSource: ds.cloneWithRows([]),
+      // dataSourceHeroes: ds.cloneWithRows(this.props.heroes),
+      // dataSourceItems: ds.cloneWithRows(this.props.items),
+      // heroes:[],
+      // heroes_bio: {},
+      // item: [],
+      heroes: this.props.heroes,
+      items: this.props.items,
       isHeroSelected: true,
       isItemSelected: false,
     };
@@ -195,6 +199,19 @@ class Content extends Component {
     //   //   dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
     //   // });
     // }
+
+    var heroes = this.state.heroes;
+    for (hero of heroes) {
+      hero['visibility'] = true;
+    }
+    var items = this.state.items;
+    for (item of items) {
+      item['visibility'] = true;
+    }
+    this.setState({
+      heroes: heroes,
+      items: items
+    });
   }
 
   _onPressIcon(data) {
@@ -235,20 +252,20 @@ class Content extends Component {
 
   _onPressButtonHero() {
     this.viewPager.setPage(0);
-    // this.setState({
-    //   dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
-    //   isHeroSelected: true,
-    //   isItemSelected: false,
-    // });
+    this.setState({
+      // dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
+      isHeroSelected: true,
+      isItemSelected: false,
+    });
   }
 
   _onPressButtonItem() {
     this.viewPager.setPage(1);
-    // this.setState({
-    //   dataSource: this.state.dataSource.cloneWithRows(this.state.items),
-    //   isHeroSelected: false,
-    //   isItemSelected: true,
-    // });
+    this.setState({
+      // dataSource: this.state.dataSource.cloneWithRows(this.state.items),
+      isHeroSelected: false,
+      isItemSelected: true,
+    });
   }
 
   _onPressButtonDownload() {
@@ -318,6 +335,40 @@ class Content extends Component {
     }
   }
 
+  _onChangeInputSearch(text) {
+    // console.log(text);
+    if (this.state.isHeroSelected) {
+      var heroes = this.state.heroes;
+      for (var hero of heroes) {
+        if (hero.localized_name.toLowerCase().search(text.toLowerCase()) === (-1)) {
+          hero.visibility = false;
+        } else {
+          hero.visibility = true;
+        }
+      }
+      this.setState({
+        heroes: heroes
+      });
+    } else if (this.state.isItemSelected) {
+      var items = this.state.items;
+      for (var item of items) {
+        if (item.localized_name.toLowerCase().search(text.toLowerCase()) === (-1)) {
+          item.visibility = false;
+        } else {
+          item.visibility = true;
+        }
+      }
+      this.setState({
+        items: items
+      });
+    }
+  }
+
+  _onPressButtonClearInput() {
+    this.searchInput.clear();
+    this._onChangeInputSearch("");
+  }
+
   render() {
     return (
       <View style={styles.content}>
@@ -348,8 +399,12 @@ class Content extends Component {
           onPress={() => this._onPressButtonDownload()}
         />*/}
         <View style={styles.content_navigation}>
-          <TouchableHighlight onPress={() => this._onPressButtonHero()}><Text>Hero</Text></TouchableHighlight>
-          <TouchableHighlight onPress={() => this._onPressButtonItem()}><Text>Item</Text></TouchableHighlight>
+          <TouchableHighlight onPress={() => this._onPressButtonHero()}>
+            <Text style={{fontSize: 18}}>Hero</Text>
+          </TouchableHighlight>
+          <TouchableHighlight onPress={() => this._onPressButtonItem()}>
+            <Text style={{fontSize: 18}}>Item</Text>
+          </TouchableHighlight>
         </View>
 {/*        <ListView
           contentContainerStyle={styles.item_list}
@@ -377,58 +432,77 @@ class Content extends Component {
             }
           }
         />*/}
-        <ViewPagerAndroid
-          style={{flex: 1}}
-          ref={(viewPager) => {this.viewPager = viewPager;}}
-        >
-          <View>
-            <ScrollView>
-              {
-                this.props.heroes.map((hero, index) => {
-                  return (
-                    <View key={hero.short_name} style={styles.item_box}>
-                      <TouchableHighlight onPress={() => this._onPressIconHero(hero)}>
-                        <Image
-                          source={{uri: hero.icon_url}}
-                          style={styles.item_image}
-                        />
-                      </TouchableHighlight>
-                      <TouchableHighlight onPress={() => this._onPressIconHero(hero)}>
-                        <Text style={styles.item_text}>{hero.localized_name}</Text>
-                      </TouchableHighlight>
-                    </View>
-                  );
-                })
-              }
-            </ScrollView>
-          </View>
-          <View>
-            <ScrollView>
-              {
-                this.props.items.map((item, index) => {
-                  // Only render items whose cost is greater than 0 (no need recipe)
-                  if (Number(item.cost) > 0 || item.cost === undefined) {
-                    return (
-                      <View key={item.short_name} style={styles.item_box}>
-                        <TouchableHighlight onPress={() => this._onPressIconItem(item)}>
-                          <Image
-                            source={{uri: item.icon_url}}
-                            style={styles.item_image}
-                          />
-                        </TouchableHighlight>
-                        <TouchableHighlight onPress={() => this._onPressIconItem(item)}>
-                          <Text style={styles.item_text}>{item.localized_name}</Text>
-                        </TouchableHighlight>
-                      </View>
-                    );
-                  } else {
-                    return(<View key={item.short_name}></View>);
-                  }
-                })
-              }
-            </ScrollView>
-          </View>
-        </ViewPagerAndroid>
+        <View style={{flex: 1}}>
+          <ViewPagerAndroid  style={{flex: 1}} ref={(viewPager) => {this.viewPager = viewPager;}}>
+            <View>
+              <ScrollView>
+                {
+                  this.state.heroes.map((hero, index) => {
+                    if (hero.visibility) {
+                      return (
+                        <View key={hero.short_name} style={styles.item_box}>
+                          <TouchableHighlight onPress={() => this._onPressIconHero(hero)}>
+                            <Image
+                              source={{uri: hero.icon_url}}
+                              style={styles.item_image}
+                            />
+                          </TouchableHighlight>
+                          <TouchableHighlight onPress={() => this._onPressIconHero(hero)}>
+                            <Text style={styles.item_text}>{hero.localized_name}</Text>
+                          </TouchableHighlight>
+                        </View>
+                      );
+                    } else {
+                      return(<View key={hero.short_name}></View>);
+                    }
+                  })
+                }
+              </ScrollView>
+            </View>
+            <View>
+              <ScrollView>
+                {
+                  this.state.items.map((item, index) => {
+                    // Only render items whose cost is greater than 0 (no need recipe)
+                    if (Number(item.cost) > 0 || item.cost === undefined) {
+                      if (item.visibility) {
+                        return (
+                          <View key={item.short_name} style={styles.item_box}>
+                            <TouchableHighlight onPress={() => this._onPressIconItem(item)}>
+                              <Image
+                                source={{uri: item.icon_url}}
+                                style={styles.item_image}
+                              />
+                            </TouchableHighlight>
+                            <TouchableHighlight onPress={() => this._onPressIconItem(item)}>
+                              <Text style={styles.item_text}>{item.localized_name}</Text>
+                            </TouchableHighlight>
+                          </View>
+                        );
+                      } else {
+                        return(<View key={item.short_name}></View>);
+                      }
+                    } else {
+                      return(<View key={item.short_name}></View>);
+                    }
+                  })
+                }
+              </ScrollView>
+            </View>
+          </ViewPagerAndroid>
+        </View>
+        <View style={{flexDirection: 'row'}}>
+          <TextInput
+            ref={(searchInput) => this.searchInput = searchInput}
+            style={{flex: 10}}
+            placeholder="Type to start searching..."
+            onChangeText={(text) => this._onChangeInputSearch(text)}
+          />
+          <Button
+            title="Clear"
+            onPress={() => this._onPressButtonClearInput()}
+          />
+        </View>
       </View>
     );
   }

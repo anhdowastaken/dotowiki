@@ -157,7 +157,7 @@ class StartingScene extends Component {
         counter--;
         if (counter === 0) {
           if (didDataExisted === true) {
-            this.props.navigator.push({
+            this.props.navigator.replace({
               scene_id: "MainScene",
               heroes: heroes,
               items: items
@@ -202,7 +202,7 @@ class StartingScene extends Component {
         counter--;
         if (counter === 0) {
           if (didDataExisted === true) {
-            this.props.navigator.push({
+            this.props.navigator.replace({
               scene_id: "MainScene",
               heroes: heroes,
               items: items
