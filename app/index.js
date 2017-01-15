@@ -30,6 +30,7 @@ var StartingScene = require("./scenes/starting_scene.js");
 var MainScene = require("./scenes/main_scene.js");
 var HeroScene = require("./scenes/hero_scene.js");
 var ItemScene = require("./scenes/item_scene.js");
+var AbilityScene = require("./scenes/ability_scene.js");
 var _navigator;
 
 export default class dotowiki extends Component {
@@ -51,6 +52,10 @@ export default class dotowiki extends Component {
       case "ItemScene":
         return (<ItemScene navigator={navigator}
           item={route.selected_item}/>
+        );
+      case "AbilityScene":
+        return (<AbilityScene navigator={navigator}
+          ability={route.selected_ability}/>
         );
       default:
         return (<View><Text>There are somethings wrong...</Text></View>);

@@ -74,6 +74,13 @@ class HeroScene extends Component {
     this.props.navigator.pop();
   }
 
+  _onPressAbility(ability) {
+    this.props.navigator.push({
+      scene_id: "AbilityScene",
+      selected_ability: ability
+    });
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -104,9 +111,17 @@ class HeroScene extends Component {
               <Text>Abilities:</Text>
               {
                 this.props.hero.abilities.map((ability, index) => {
-                  return (
-                    <Text key={ability.id}>{ability.full_name}</Text>
-                  );
+                  if (ability.name.toLowerCase().search("special_bonus_") === (-1)) {
+                    return (
+                      <TouchableHighlight key={ability.id} onPress={() => this._onPressAbility(ability)}>
+                        <Text>{ability.full_name}</Text>
+                      </TouchableHighlight>
+                    );
+                  } else {
+                    return (
+                      <Text key={ability.id}>{ability.full_name}</Text>
+                    );
+                  }
                 })
               }
               <Text>Lore:</Text>
