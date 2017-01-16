@@ -95,6 +95,9 @@ const styles = StyleSheet.create({
   }
 });
 
+var HERO_LIST_PAGE=0;
+var ITEM_LIST_PAGE=1;
+
 // NOTE: All React components must start with a upper case letter, or contain a dot.
 class MainScene extends Component {
   constructor(props) {
@@ -243,7 +246,8 @@ class MainScene extends Component {
   }
 
   _onPressButtonHero() {
-    this.viewPager.setPage(0);
+    this._onPressButtonClearInput();
+    this.viewPager.setPage(HERO_LIST_PAGE);
     this.setState({
       // dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
       isHeroSelected: true,
@@ -252,7 +256,8 @@ class MainScene extends Component {
   }
 
   _onPressButtonItem() {
-    this.viewPager.setPage(1);
+    this._onPressButtonClearInput();
+    this.viewPager.setPage(ITEM_LIST_PAGE);
     this.setState({
       // dataSource: this.state.dataSource.cloneWithRows(this.state.items),
       isHeroSelected: false,
@@ -386,6 +391,21 @@ class MainScene extends Component {
     this._onChangeInputSearch("");
   }
 
+  _onPageSelected(event) {
+    this._onPressButtonClearInput();
+    if (event.nativeEvent.position === HERO_LIST_PAGE) {
+      this.setState({
+        isHeroSelected: true,
+        isItemSelected: false,
+      });
+    } else if (event.nativeEvent.position === ITEM_LIST_PAGE) {
+      this.setState({
+        isHeroSelected: false,
+        isItemSelected: true,
+      });
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -465,7 +485,11 @@ class MainScene extends Component {
             }
           />*/}
           <View style={{flex: 1}}>
-            <ViewPagerAndroid  style={{flex: 1}} ref={(viewPager) => {this.viewPager = viewPager;}}>
+            <ViewPagerAndroid
+              style={{flex: 1}}
+              ref={(viewPager) => {this.viewPager = viewPager;}}
+              onPageSelected={(event) => this._onPageSelected(event)}
+            >
               <View>
                 <ScrollView>
                   {
