@@ -37,7 +37,7 @@ class ItemScene extends Component {
 
   render() {
     return(
-      <View>
+      <View style={{backgroundColor: '#FFFFFF'}}>
         <Button
           title="Back"
           onPress={() => this._onPressBack()}
