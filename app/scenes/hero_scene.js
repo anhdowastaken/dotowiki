@@ -11,6 +11,7 @@ import {
   View,
   ScrollView,
   Image,
+  Button
 } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -85,9 +86,11 @@ class HeroScene extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.top}>
-          <TouchableHighlight onPress={() => this._onPressBack()}>
-            <Text style={styles.top_button_back}>Back</Text>
-          </TouchableHighlight>
+          <Button
+            style={styles.top_button_back}
+            title="Back"
+            onPress={() => this._onPressBack()}
+          />
           <Text style={styles.top_title}>{this.props.hero.localized_name} ({this.props.hero.team})</Text>
         </View>
 

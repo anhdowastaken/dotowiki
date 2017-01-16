@@ -9,7 +9,7 @@ import {
   Text,
   TouchableHighlight,
   View,
-  // ScrollView,
+  Button,
   Image,
 } from 'react-native';
 
@@ -38,9 +38,10 @@ class AbilityScene extends Component {
   render() {
     return(
       <View>
-        <TouchableHighlight onPress={() => this._onPressBack()}>
-          <Text>Back</Text>
-        </TouchableHighlight>
+        <Button
+          title="Back"
+          onPress={() => this._onPressBack()}
+        />
         <Text>DOTOWIKI</Text>
         <Text>{this.props.ability.full_name}</Text>
         <Text>Affects: {this.props.ability.affects}</Text>

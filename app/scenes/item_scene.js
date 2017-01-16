@@ -9,7 +9,7 @@ import {
   Text,
   TouchableHighlight,
   View,
-  // ScrollView,
+  Button,
   Image,
 } from 'react-native';
 
@@ -38,9 +38,10 @@ class ItemScene extends Component {
   render() {
     return(
       <View>
-        <TouchableHighlight onPress={() => this._onPressBack()}>
-          <Text>Back</Text>
-        </TouchableHighlight>
+        <Button
+          title="Back"
+          onPress={() => this._onPressBack()}
+        />
         <Text>DOTOWIKI</Text>
         <Text>{this.props.item.localized_name}</Text>
         <Image source={{uri: this.props.item.icon_url}} style={styles.item_image}/>

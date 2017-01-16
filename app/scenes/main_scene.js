@@ -31,7 +31,9 @@ const styles = StyleSheet.create({
 
   top: {
     // flex: 1,
-    height: 50,
+    height: 30,
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
   },
 
   top_title: {
@@ -52,14 +54,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around'
   },
 
-  bottom: {
-    // flex: 1,
-    height: 50,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
+  // bottom: {
+  //   // flex: 1,
+  //   height: 50,
+  //   position: 'absolute',
+  //   bottom: 0,
+  //   left: 0,
+  //   right: 0,
+  // },
 
   // Show hero list in grid
   item_list: {
@@ -94,19 +96,7 @@ const styles = StyleSheet.create({
 });
 
 // NOTE: All React components must start with a upper case letter, or contain a dot.
-class Top extends Component {
-  render() {
-    return (
-      <View style={styles.top}>
-        <Text style={styles.top_title}>
-          DOTOWIKI
-        </Text>
-      </View>
-    );
-  }
-}
-
-class Content extends Component {
+class MainScene extends Component {
   constructor(props) {
     super(props);
     // Setup data source for ListView
@@ -200,6 +190,8 @@ class Content extends Component {
     //   // });
     // }
 
+    console.log(this.state.heroes);
+    console.log(this.state.items);
     var heroes = this.state.heroes;
     for (hero of heroes) {
       hero['visibility'] = true;
@@ -268,7 +260,32 @@ class Content extends Component {
     });
   }
 
+  _onPressNoButton() {
+    // Do nothing
+  }
+
+  _onPressYesButton() {
+    this.props.navigator.replace({
+      scene_id: "StartingScene",
+      force_update: true
+    });
+  }
+
   _onPressButtonDownload() {
+    Alert.alert(
+      'DOTOWIKI',
+      'You want to re-download now, don\'t you?',
+      [
+        {text: 'No', onPress: () => this._onPressNoButton()},
+        {text: 'Yes', onPress: () => this._onPressYesButton()},
+      ],
+      {
+        cancelable: false
+      }
+    );
+
+    return;
+
     var counter = 2;
 
     this.setState({
@@ -371,168 +388,156 @@ class Content extends Component {
 
   render() {
     return (
-      <View style={styles.content}>
-        <Modal
-          animationType = {"fade"}
-          transparent = {false}
-          visible = {this.state.modalVisisble}
-          onRequestClose={() => {
-              this.setState({
-                modalVisisble: false
-              });
-            }
-          }
-        >
+      <View style={styles.container}>
+        <View style={styles.top}>
           <View style={{
-            justifyContent: 'center',
-            alignItems: 'center',
+            flex: 5,
+            justifyContent: 'center'
+          }}><Text style={{
+            textAlign: 'center',
+            fontSize: 20,
+            padding: 3
           }}>
-            <Text style={{textAlign: 'center'}}>Downloading...</Text>
-            <ActivityIndicator
-              animating={true}
-              size="small"
-            />
-          </View>
-        </Modal>
-{/*        <Button
-          title="Download data"
-          onPress={() => this._onPressButtonDownload()}
-        />*/}
-        <View style={styles.content_navigation}>
-          <TouchableHighlight onPress={() => this._onPressButtonHero()}>
-            <Text style={{fontSize: 18}}>Hero</Text>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={() => this._onPressButtonItem()}>
-            <Text style={{fontSize: 18}}>Item</Text>
-          </TouchableHighlight>
+            DOTOWIKI
+          </Text></View>
+          <View style={{
+            flex: 2
+          }}><Button
+            title="Download"
+            onPress={() => this._onPressButtonDownload()}
+          /></View>
         </View>
-{/*        <ListView
-          contentContainerStyle={styles.item_list}
-          dataSource={this.state.dataSource}
-          renderRow={(rowData) => {
-              // Only render heroes and items whose cost is greater than 0 (no need recipe)
-              if (Number(rowData.cost) > 0 || rowData.cost === undefined) {
-                return (
-                  <View style={styles.item_box}>
-                    <TouchableHighlight onPress={() => this._onPressIcon(rowData)}>
-                      <Image
-                        source={{uri: rowData.icon_url}}
-                        style={styles.item_image}
-                      />
-                    </TouchableHighlight>
-                    <TouchableHighlight onPress={() => this._onPressIcon(rowData)}>
-                      <Text style={styles.item_text}>{rowData.localized_name}</Text>
-                    </TouchableHighlight>
-                  </View>
-                );
-              } else {
-                // Render empty element
-                return (<View></View>);
+        <View style={styles.content}>
+{/*          <Modal
+            animationType = {"fade"}
+            transparent = {false}
+            visible = {this.state.modalVisisble}
+            onRequestClose={() => {
+                this.setState({
+                  modalVisisble: false
+                });
               }
             }
-          }
-        />*/}
-        <View style={{flex: 1}}>
-          <ViewPagerAndroid  style={{flex: 1}} ref={(viewPager) => {this.viewPager = viewPager;}}>
-            <View>
-              <ScrollView>
-                {
-                  this.state.heroes.map((hero, index) => {
-                    if (hero.visibility) {
-                      return (
-                        <View key={hero.short_name} style={styles.item_box}>
-                          <TouchableHighlight onPress={() => this._onPressIconHero(hero)}>
-                            <Image
-                              source={{uri: hero.icon_url}}
-                              style={styles.item_image}
-                            />
-                          </TouchableHighlight>
-                          <TouchableHighlight onPress={() => this._onPressIconHero(hero)}>
-                            <Text style={styles.item_text}>{hero.localized_name}</Text>
-                          </TouchableHighlight>
-                        </View>
-                      );
-                    } else {
-                      return(<View key={hero.short_name}></View>);
-                    }
-                  })
-                }
-              </ScrollView>
+          >
+            <View style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+              <Text style={{textAlign: 'center'}}>Downloading...</Text>
+              <ActivityIndicator
+                animating={true}
+                size="small"
+              />
             </View>
-            <View>
-              <ScrollView>
-                {
-                  this.state.items.map((item, index) => {
-                    // Only render items whose cost is greater than 0 (no need recipe)
-                    if (Number(item.cost) > 0 || item.cost === undefined) {
-                      if (item.visibility) {
+          </Modal>*/}
+          <View style={styles.content_navigation}>
+            <TouchableHighlight onPress={() => this._onPressButtonHero()}>
+              <Text style={{fontSize: 18}}>Hero</Text>
+            </TouchableHighlight>
+            <TouchableHighlight onPress={() => this._onPressButtonItem()}>
+              <Text style={{fontSize: 18}}>Item</Text>
+            </TouchableHighlight>
+          </View>
+  {/*        <ListView
+            contentContainerStyle={styles.item_list}
+            dataSource={this.state.dataSource}
+            renderRow={(rowData) => {
+                // Only render heroes and items whose cost is greater than 0 (no need recipe)
+                if (Number(rowData.cost) > 0 || rowData.cost === undefined) {
+                  return (
+                    <View style={styles.item_box}>
+                      <TouchableHighlight onPress={() => this._onPressIcon(rowData)}>
+                        <Image
+                          source={{uri: rowData.icon_url}}
+                          style={styles.item_image}
+                        />
+                      </TouchableHighlight>
+                      <TouchableHighlight onPress={() => this._onPressIcon(rowData)}>
+                        <Text style={styles.item_text}>{rowData.localized_name}</Text>
+                      </TouchableHighlight>
+                    </View>
+                  );
+                } else {
+                  // Render empty element
+                  return (<View></View>);
+                }
+              }
+            }
+          />*/}
+          <View style={{flex: 1}}>
+            <ViewPagerAndroid  style={{flex: 1}} ref={(viewPager) => {this.viewPager = viewPager;}}>
+              <View>
+                <ScrollView>
+                  {
+                    this.state.heroes.map((hero, index) => {
+                      if (hero.visibility) {
                         return (
-                          <View key={item.short_name} style={styles.item_box}>
-                            <TouchableHighlight onPress={() => this._onPressIconItem(item)}>
+                          <View key={hero.short_name} style={styles.item_box}>
+                            <TouchableHighlight onPress={() => this._onPressIconHero(hero)}>
                               <Image
-                                source={{uri: item.icon_url}}
+                                source={{uri: hero.icon_url}}
                                 style={styles.item_image}
                               />
                             </TouchableHighlight>
-                            <TouchableHighlight onPress={() => this._onPressIconItem(item)}>
-                              <Text style={styles.item_text}>{item.localized_name}</Text>
+                            <TouchableHighlight onPress={() => this._onPressIconHero(hero)}>
+                              <Text style={styles.item_text}>{hero.localized_name}</Text>
                             </TouchableHighlight>
                           </View>
                         );
                       } else {
+                        return(<View key={hero.short_name}></View>);
+                      }
+                    })
+                  }
+                </ScrollView>
+              </View>
+              <View>
+                <ScrollView>
+                  {
+                    this.state.items.map((item, index) => {
+                      // Only render items whose cost is greater than 0 (no need recipe)
+                      if (Number(item.cost) > 0 || item.cost === undefined) {
+                        if (item.visibility) {
+                          return (
+                            <View key={item.short_name} style={styles.item_box}>
+                              <TouchableHighlight onPress={() => this._onPressIconItem(item)}>
+                                <Image
+                                  source={{uri: item.icon_url}}
+                                  style={styles.item_image}
+                                />
+                              </TouchableHighlight>
+                              <TouchableHighlight onPress={() => this._onPressIconItem(item)}>
+                                <Text style={styles.item_text}>{item.localized_name}</Text>
+                              </TouchableHighlight>
+                            </View>
+                          );
+                        } else {
+                          return(<View key={item.short_name}></View>);
+                        }
+                      } else {
                         return(<View key={item.short_name}></View>);
                       }
-                    } else {
-                      return(<View key={item.short_name}></View>);
-                    }
-                  })
-                }
-              </ScrollView>
-            </View>
-          </ViewPagerAndroid>
-        </View>
-        <View style={{flexDirection: 'row'}}>
-          <TextInput
-            ref={(searchInput) => this.searchInput = searchInput}
-            style={{flex: 10}}
-            placeholder="Type to start searching..."
-            onChangeText={(text) => this._onChangeInputSearch(text)}
-          />
-          <Button
-            title="Clear"
-            onPress={() => this._onPressButtonClearInput()}
-          />
+                    })
+                  }
+                </ScrollView>
+              </View>
+            </ViewPagerAndroid>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+            <TextInput
+              ref={(searchInput) => this.searchInput = searchInput}
+              style={{flex: 10}}
+              placeholder="Type to start searching..."
+              onChangeText={(text) => this._onChangeInputSearch(text)}
+            />
+            <Button
+              title="Clear"
+              onPress={() => this._onPressButtonClearInput()}
+            />
+          </View>
         </View>
       </View>
     );
-  }
-}
-
-class Bottom extends Component {
-  render() {
-    return (
-      <View style={styles.bottom}>
-        <TextInput
-          placeholder="Input everything you want to search!"
-        />
-      </View>
-    );
-  }
-}
-
-class MainScene extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Top/>
-        <Content
-          navigator={this.props.navigator}
-          heroes={this.props.heroes}
-          items={this.props.items}
-        />
-        {/*<Bottom/>*/}
-      </View>
-    )
   }
 }
 

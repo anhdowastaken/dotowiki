@@ -46,10 +46,14 @@ class StartingScene extends Component {
 
   _onPressNoButton() {
     // TODO: Only work with Android
-    // BackAndroid.exitApp();
+    BackAndroid.exitApp();
   }
 
   _onPressYesButton() {
+    this.downloadDataFromDotowikiServer();
+  }
+
+  downloadDataFromDotowikiServer() {
     var counter = 2;
     var heroes = [];
     var items = [];
@@ -133,102 +137,106 @@ class StartingScene extends Component {
   }
 
   componentDidMount() {
-    var didDataExisted = true;
-    var counter = 2;
-    var heroes = [];
-    var items = [];
+    if (this.props.force_update) {
+      this.downloadDataFromDotowikiServer();
+    } else {
+      var didDataExisted = true;
+      var counter = 2;
+      var heroes = [];
+      var items = [];
 
-    // Check data existing or not
-    try {
-      AsyncStorage.getItem("dotowiki_heroes.json")
-      .then((response) => {
-        if (response === null) {
-          console.log("Heroes data is null");
-          didDataExisted = false;
-        } else {
-          var data = JSON.parse(response);
-          heroes = data;
-          if (data === [] || data === "") {
-            console.log("Heroes data is empty");
+      // Check data existing or not
+      try {
+        AsyncStorage.getItem("dotowiki_heroes.json")
+        .then((response) => {
+          if (response === null) {
+            console.log("Heroes data is null");
             didDataExisted = false;
-          }
-        }
-
-        counter--;
-        if (counter === 0) {
-          if (didDataExisted === true) {
-            this.props.navigator.replace({
-              scene_id: "MainScene",
-              heroes: heroes,
-              items: items
-            });
           } else {
-            Alert.alert(
-              'DOTOWIKI',
-              'There is no data! Do you want to download now?',
-              [
-                {text: 'No', onPress: () => this._onPressNoButton()},
-                {text: 'Yes', onPress: () => this._onPressYesButton()},
-              ],
-              {
-                cancelable: false
-              }
-            )
+            var data = JSON.parse(response);
+            heroes = data;
+            if (data === [] || data === "") {
+              console.log("Heroes data is empty");
+              didDataExisted = false;
+            }
           }
-        }
-      });
-    } catch (error) {
-      // Error retrieving data
-      console.log("There is error when get data of heroes");
-      didDataExisted = false;
-    }
 
-    // Get items from https://dotowiki.herokuapp.com/dotowiki_items.json
-    try {
-      AsyncStorage.getItem("dotowiki_items.json")
-      .then((response) => {
-        if (response === null) {
-          console.log("Items data is null");
-          didDataExisted = false;
-        } else {
-          var data = JSON.parse(response);
-          items = data;
-          if (data === [] || data === "") {
-            console.log("Items data is empty");
+          counter--;
+          if (counter === 0) {
+            if (didDataExisted === true) {
+              this.props.navigator.replace({
+                scene_id: "MainScene",
+                heroes: heroes,
+                items: items
+              });
+            } else {
+              Alert.alert(
+                'DOTOWIKI',
+                'There is no data! Do you want to download now?',
+                [
+                  {text: 'No', onPress: () => this._onPressNoButton()},
+                  {text: 'Yes', onPress: () => this._onPressYesButton()},
+                ],
+                {
+                  cancelable: false
+                }
+              );
+            }
+          }
+        });
+      } catch (error) {
+        // Error retrieving data
+        console.log("There is error when get data of heroes");
+        didDataExisted = false;
+      }
+
+      // Get items from https://dotowiki.herokuapp.com/dotowiki_items.json
+      try {
+        AsyncStorage.getItem("dotowiki_items.json")
+        .then((response) => {
+          if (response === null) {
+            console.log("Items data is null");
             didDataExisted = false;
-          }
-        }
-
-        counter--;
-        if (counter === 0) {
-          if (didDataExisted === true) {
-            this.props.navigator.replace({
-              scene_id: "MainScene",
-              heroes: heroes,
-              items: items
-            });
           } else {
-            this.setState({
-              downloadAnimating: false
-            });
-            Alert.alert(
-              'DOTOWIKI',
-              'There is no data! Do you want to download now?',
-              [
-                {text: 'No', onPress: () => this._onPressNoButton()},
-                {text: 'Yes', onPress: () => this._onPressYesButton()},
-              ],
-              {
-                cancelable: false
-              }
-            )
+            var data = JSON.parse(response);
+            items = data;
+            if (data === [] || data === "") {
+              console.log("Items data is empty");
+              didDataExisted = false;
+            }
           }
-        }
-      });
-    } catch (error) {
-      // Error retrieving data
-      console.log("There is error when get data of items");
-      didDataExisted = false;
+
+          counter--;
+          if (counter === 0) {
+            if (didDataExisted === true) {
+              this.props.navigator.replace({
+                scene_id: "MainScene",
+                heroes: heroes,
+                items: items
+              });
+            } else {
+              this.setState({
+                downloadAnimating: false
+              });
+              Alert.alert(
+                'DOTOWIKI',
+                'There is no data! Do you want to download now?',
+                [
+                  {text: 'No', onPress: () => this._onPressNoButton()},
+                  {text: 'Yes', onPress: () => this._onPressYesButton()},
+                ],
+                {
+                  cancelable: false
+                }
+              );
+            }
+          }
+        });
+      } catch (error) {
+        // Error retrieving data
+        console.log("There is error when get data of items");
+        didDataExisted = false;
+      }
     }
   }
 
