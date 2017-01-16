@@ -73,7 +73,7 @@ class StartingScene extends Component {
         // this.setState({
         //   heroes: data,
         // });
-        // console.log(data);
+        console.log(data);
         heroes = data;
 
         AsyncStorage.setItem("dotowiki_heroes.json", JSON.stringify(heroes));
@@ -109,7 +109,7 @@ class StartingScene extends Component {
         // this.setState({
         //   items: data,
         // });
-        // console.log(data);
+        console.log(data);
         items = data;
 
         AsyncStorage.setItem("dotowiki_items.json", JSON.stringify(items));
@@ -138,6 +138,7 @@ class StartingScene extends Component {
   }
 
   componentDidMount() {
+    // console.log(this.props.force_update);
     if (this.props.force_update) {
       this.downloadDataFromDotowikiServer();
     } else {

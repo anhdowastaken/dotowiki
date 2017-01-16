@@ -193,8 +193,8 @@ class MainScene extends Component {
     //   // });
     // }
 
-    console.log(this.state.heroes);
-    console.log(this.state.items);
+    // console.log(this.state.heroes);
+    // console.log(this.state.items);
     var heroes = this.state.heroes;
     for (hero of heroes) {
       hero['visibility'] = true;

@@ -39,22 +39,29 @@ export default class dotowiki extends Component {
 
     switch (route.scene_id) {
       case "StartingScene":
-        return (<StartingScene navigator={navigator}/>);
+        return (<StartingScene
+          navigator={navigator}
+          force_update={route.force_update}
+          />);
       case "MainScene":
-        return (<MainScene navigator={navigator}
+        return (<MainScene
+          navigator={navigator}
           heroes={route.heroes}
           items={route.items}
           />);
       case "HeroScene":
-        return (<HeroScene navigator={navigator}
+        return (<HeroScene
+          navigator={navigator}
           hero={route.selected_hero}/>
         );
       case "ItemScene":
-        return (<ItemScene navigator={navigator}
+        return (<ItemScene
+          navigator={navigator}
           item={route.selected_item}/>
         );
       case "AbilityScene":
-        return (<AbilityScene navigator={navigator}
+        return (<AbilityScene
+          navigator={navigator}
           ability={route.selected_ability}/>
         );
       default:
