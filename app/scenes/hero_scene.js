@@ -120,6 +120,8 @@ class HeroScene extends Component {
   }
 
   render() {
+    var theLastIndexOfNormalAbility = 0;
+
     return (
       <View style={styles.container}>
         <View style={styles.top}>
@@ -156,15 +158,31 @@ class HeroScene extends Component {
               {
                 this.state.hero.abilities.map((ability, index) => {
                   if (ability.name.toLowerCase().search("special_bonus_") === (-1)) {
+                    theLastIndexOfNormalAbility = index;
                     return (
                       <TouchableHighlight key={ability.id} onPress={() => this._onPressAbility(ability)}>
                         <Text>{ability.full_name}</Text>
                       </TouchableHighlight>
                     );
-                  } else {
-                    return (
-                      <Text key={ability.id}>{ability.full_name}</Text>
-                    );
+                  }
+                })
+              }
+              <Text>Talent tree:</Text>
+              {
+                this.state.hero.abilities.map((ability, index) => {
+                  if (ability.name.toLowerCase().search("special_bonus_") !== (-1)) {
+                    var indexOfAbilityInTalentTree = index - theLastIndexOfNormalAbility;
+                    switch (indexOfAbilityInTalentTree) {
+                      case (1):
+                      case (3):
+                      case (5):
+                      case (7):
+                        return (
+                          <Text key={index}>Level {10 + 2.5 * (indexOfAbilityInTalentTree - 1)}: {ability.full_name} OR {this.state.hero.abilities[index + 1].full_name}</Text>
+                        );
+                      default:
+                        return null;
+                    }
                   }
                 })
               }
