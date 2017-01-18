@@ -16,8 +16,8 @@ import {
   Alert,
   Navigator,
   AsyncStorage,
-  ActivityIndicator,
-  Modal,
+  // ActivityIndicator,
+  // Modal,
   Button,
   ViewPagerAndroid,
 } from 'react-native';
@@ -125,74 +125,6 @@ class MainScene extends Component {
   }
 
   componentDidMount() {
-    // // Get heroes from https://dotowiki.herokuapp.com/heroes
-    // try {
-    //   const data = AsyncStorage.getItem("dotowiki_heroes.json")
-    //   .then((response) => {
-    //     if (response) {
-    //       data = JSON.parse(response);
-    //       console.log(data);
-    //       // Avoid empty data
-    //       if (data === "") {
-    //         Alert.alert("No heroes data! Please download again!");
-    //         data = [];
-    //       }
-    //       this.setState({
-    //         heroes: data,
-    //       });
-    //       this.setState({
-    //         dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
-    //       });
-    //     } else {
-    //       Alert.alert("No heroes data! Please download again!");
-    //     }
-    //   });
-    // } catch (error) {
-    //   // Error retrieving data
-    //   console.log(error);
-    //   Alert.alert("Incorrect heroes data! Please download again!");
-    //   this.setState({
-    //     heroes: [],
-    //   });
-    //   this.setState({
-    //     dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
-    //   });
-    // }
-
-    // // Get items from https://dotowiki.herokuapp.com/dotowiki_items.json
-    // try {
-    //   const data = AsyncStorage.getItem("dotowiki_items.json")
-    //   .then((response) => {
-    //     if (response) {
-    //       data = JSON.parse(response);
-    //       console.log(data);
-    //       // Avoid empty data
-    //       if (data === "") {
-    //         Alert.alert("No items data! Please download again!");
-    //         data = [];
-    //       }
-    //       this.setState({
-    //         items: data,
-    //       });
-    //       // this.setState({
-    //       //   dataSource: this.state.dataSource.cloneWithRows(this.state.items),
-    //       // });
-    //     } else {
-    //       Alert.alert("No items data! Please download again!");
-    //     }
-    //   });
-    // } catch (error) {
-    //   // Error retrieving data
-    //   console.log(error);
-    //   Alert.alert("Incorrect items data! Please download again!");
-    //   this.setState({
-    //     items: [],
-    //   });
-    //   // this.setState({
-    //   //   dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
-    //   // });
-    // }
-
     // console.log(this.state.heroes);
     // console.log(this.state.items);
     var heroes = this.state.heroes;
@@ -428,28 +360,6 @@ class MainScene extends Component {
           /></View>
         </View>
         <View style={styles.content}>
-{/*          <Modal
-            animationType = {"fade"}
-            transparent = {false}
-            visible = {this.state.modalVisisble}
-            onRequestClose={() => {
-                this.setState({
-                  modalVisisble: false
-                });
-              }
-            }
-          >
-            <View style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-              <Text style={{textAlign: 'center'}}>Downloading...</Text>
-              <ActivityIndicator
-                animating={true}
-                size="small"
-              />
-            </View>
-          </Modal>*/}
           <View style={styles.content_navigation}>
             <TouchableHighlight onPress={() => this._onPressButtonHero()}>
               <Text style={{fontSize: 18}}>Hero</Text>
@@ -458,32 +368,6 @@ class MainScene extends Component {
               <Text style={{fontSize: 18}}>Item</Text>
             </TouchableHighlight>
           </View>
-  {/*        <ListView
-            contentContainerStyle={styles.item_list}
-            dataSource={this.state.dataSource}
-            renderRow={(rowData) => {
-                // Only render heroes and items whose cost is greater than 0 (no need recipe)
-                if (Number(rowData.cost) > 0 || rowData.cost === undefined) {
-                  return (
-                    <View style={styles.item_box}>
-                      <TouchableHighlight onPress={() => this._onPressIcon(rowData)}>
-                        <Image
-                          source={{uri: rowData.icon_url}}
-                          style={styles.item_image}
-                        />
-                      </TouchableHighlight>
-                      <TouchableHighlight onPress={() => this._onPressIcon(rowData)}>
-                        <Text style={styles.item_text}>{rowData.localized_name}</Text>
-                      </TouchableHighlight>
-                    </View>
-                  );
-                } else {
-                  // Render empty element
-                  return (<View></View>);
-                }
-              }
-            }
-          />*/}
           <View style={{flex: 1}}>
             <ViewPagerAndroid
               style={{flex: 1}}

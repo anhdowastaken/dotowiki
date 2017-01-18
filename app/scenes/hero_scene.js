@@ -59,6 +59,10 @@ const styles = StyleSheet.create({
   content_hero_abilities_and_lore: {
     flex: 3,
   },
+
+  content_hero_abilities: {
+    flexDirection: 'row'
+  }
 });
 
 class HeroScene extends Component {
@@ -159,11 +163,26 @@ class HeroScene extends Component {
                 this.state.hero.abilities.map((ability, index) => {
                   if (ability.name.toLowerCase().search("special_bonus_") === (-1)) {
                     theLastIndexOfNormalAbility = index;
-                    return (
-                      <TouchableHighlight key={ability.id} onPress={() => this._onPressAbility(ability)}>
-                        <Text>{ability.full_name}</Text>
-                      </TouchableHighlight>
-                    );
+                    if (ability.full_name) {
+                      return (
+                        <View style={styles.content_hero_abilities} key={ability.id}>
+                          <TouchableHighlight onPress={() => this._onPressAbility(ability)}>
+                            <Image
+                              source={{uri: ability.icon_url}}
+                              style={{
+                                height: 45,
+                                width: 45
+                              }}
+                            />
+                          </TouchableHighlight>
+                          <TouchableHighlight onPress={() => this._onPressAbility(ability)}>
+                            <Text>{ability.full_name}</Text>
+                          </TouchableHighlight>
+                        </View>
+                      );
+                    } else {
+                      return null;
+                    }
                   }
                 })
               }
@@ -178,7 +197,11 @@ class HeroScene extends Component {
                       case (5):
                       case (7):
                         return (
-                          <Text key={index}>Level {10 + 2.5 * (indexOfAbilityInTalentTree - 1)}: {ability.full_name} OR {this.state.hero.abilities[index + 1].full_name}</Text>
+                          <View  key={this.state.hero.abilities[index].id + "_" + this.state.hero.abilities[index + 1].id}>
+                            <Text>
+                              Level {10 + 2.5 * (indexOfAbilityInTalentTree - 1)}: {this.state.hero.abilities[index].full_name} OR {this.state.hero.abilities[index + 1].full_name}
+                            </Text>
+                          </View>
                         );
                       default:
                         return null;
