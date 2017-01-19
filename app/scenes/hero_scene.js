@@ -11,7 +11,8 @@ import {
   View,
   ScrollView,
   Image,
-  Button
+  Button,
+  Slider
 } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -70,42 +71,58 @@ class HeroScene extends Component {
     super(props);
 
     this._onPressBack = this._onPressBack.bind(this);
+    this._onPressAbility = this._onPressAbility.bind(this);
+    this._onChangeValueLevelSlider = this._onChangeValueLevelSlider.bind(this);
+
     this.state = {
-      hero: this.props.hero
+      hero: this.props.hero,
+      heroLevel: 0
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     var hero = this.state.hero;
 
-    // Based on primary attribute, calculate stats at level 1
-    if (hero.attributePrimary === 'STRENGTH') {
-      // If strength is a hero's primary attribute, every point in strength increases his or her attack damage by 1.
-      hero.attackDamageMin = hero.attackDamageMin + hero.attributeBaseStrength;
-      hero.attackDamageMax = hero.attackDamageMax + hero.attributeBaseStrength;
-    } else if (hero.attributePrimary === 'AGILITY') {
-      // If agility is a hero's primary attribute, every point in agility increases his or her attack damage by 1
-      hero.attackDamageMin = hero.attackDamageMin + hero.attributeBaseAgility;
-      hero.attackDamageMax = hero.attackDamageMax + hero.attributeBaseAgility;
-    } else if (hero.attributePrimary === 'INTELLECT') {
-      // If intelligence is a hero's primary attribute, every point in intelligence increases his or her attack damage by 1.
-      hero.attackDamageMin = hero.attackDamageMin + hero.attributeBaseIntelligence;
-      hero.attackDamageMax = hero.attackDamageMax + hero.attributeBaseIntelligence;
-    }
-    // Every point in strength increases maximum health by 20.
-    hero.statusHealth = hero.statusHealth + hero.attributeBaseStrength * 20;
-    // Every point in strength increases health regeneration by 0.03 HP per second.
-    hero.statusHealthRegen = hero.statusHealthRegen + hero.attributeBaseStrength * 0.03;
-    // Every point in agility increases a hero's armor by 1/7.
-    hero.armorPhysical = hero.armorPhysical + hero.attributeBaseAgility / 7;
-    // Every point in agility increases a hero's attack speed by 1.
-    // TODO: Add this stat
-    // Every point in intelligence increases a hero's maximum Mana by 12.
-    hero.statusMana = hero.statusMana + hero.attributeBaseIntelligence * 12;
-    // Every point in intelligence increases a hero's mana regeneration by 0.04 mana per second.
-    hero.statusManaRegen = hero.statusManaRegen + hero.attributeBaseIntelligence * 0.04;
-    // Every point in intelligence increases a hero's spell damage by 0.0625%.
-    hero.magicalResistance = hero.magicalResistance + hero.attributeBaseIntelligence * 0.00625;
+    hero["attackDamageMinLevelX"] = hero.attackDamageMin;
+    hero["attackDamageMaxLevelX"] = hero.attackDamageMax;
+    hero["attributeStrengthLevelX"] = hero.attributeBaseStrength;
+    hero["attributeAgilityLevelX"] = hero.attributeBaseAgility;
+    hero["attributeIntelligenceLevelX"] = hero.attributeBaseIntelligence;
+    hero["statusHealthLevelX"] = hero.statusHealth;
+    hero["statusHealthRegenLevelX"] = hero.statusHealthRegen;
+    hero["statusManaLevelX"] = hero.statusMana;
+    hero["statusManaRegenLevelX"] = hero.statusManaRegen;
+    hero["armorPhysicalLevelX"] = hero.armorPhysical;
+    hero["magicalResistanceLevelX"] = hero.magicalResistance;
+
+    // // Based on primary attribute, calculate stats at level 1
+    // if (hero.attributePrimary === 'STRENGTH') {
+    //   // If strength is a hero's primary attribute, every point in strength increases his or her attack damage by 1.
+    //   hero.attackDamageMinLevelX = hero.attackDamageMin + hero.attributeStrengthLevelX;
+    //   hero.attackDamageMaxLevelX = hero.attackDamageMax + hero.attributeStrengthLevelX;
+    // } else if (hero.attributePrimary === 'AGILITY') {
+    //   // If agility is a hero's primary attribute, every point in agility increases his or her attack damage by 1
+    //   hero.attackDamageMinLevelX = hero.attackDamageMin + hero.attributeAgilityLevelX;
+    //   hero.attackDamageMaxLevelX = hero.attackDamageMax + hero.attributeAgilityLevelX;
+    // } else if (hero.attributePrimary === 'INTELLECT') {
+    //   // If intelligence is a hero's primary attribute, every point in intelligence increases his or her attack damage by 1.
+    //   hero.attackDamageMinLevelX = hero.attackDamageMin + hero.attributeIntelligenceLevelX;
+    //   hero.attackDamageMaxLevelX = hero.attackDamageMax + hero.attributeIntelligenceLevelX;
+    // }
+    // // Every point in strength increases maximum health by 20.
+    // hero.statusHealthLevelX = hero.statusHealth + hero.attributeStrengthLevelX * 20;
+    // // Every point in strength increases health regeneration by 0.03 HP per second.
+    // hero.statusHealthRegenLevelX = hero.statusHealthRegen + hero.attributeStrengthLevelX * 0.03;
+    // // Every point in agility increases a hero's armor by 1/7.
+    // hero.armorPhysicalLevelX = hero.armorPhysical + hero.attributeAgilityLevelX / 7;
+    // // Every point in agility increases a hero's attack speed by 1.
+    // // TODO: Add this stat
+    // // Every point in intelligence increases a hero's maximum Mana by 12.
+    // hero.statusManaLevelX = hero.statusMana + hero.attributeIntelligenceLevelX * 12;
+    // // Every point in intelligence increases a hero's mana regeneration by 0.04 mana per second.
+    // hero.statusManaRegenLevelX = hero.statusManaRegen + hero.attributeIntelligenceLevelX * 0.04;
+    // // Every point in intelligence increases a hero's spell damage by 0.0625%.
+    // hero.magicalResistanceLevelX = hero.magicalResistance + hero.attributeIntelligenceLevelX * 0.00625;
 
     this.setState({
       hero: hero
@@ -121,6 +138,48 @@ class HeroScene extends Component {
       scene_id: "AbilityScene",
       selected_ability: ability
     });
+  }
+
+  _onChangeValueLevelSlider(heroLevel) {
+    var hero = this.state.hero;
+
+    // Based on primary attribute, calculate stats at level X
+    hero.attributeStrengthLevelX = hero.attributeBaseStrength + hero.attributeStrengthGain * heroLevel;
+    hero.attributeAgilityLevelX = hero.attributeBaseAgility + hero.attributeAgilityGain * heroLevel;
+    hero.attributeIntelligenceLevelX = hero.attributeBaseIntelligence + hero.attributeIntelligenceGain * heroLevel;
+
+    if (hero.attributePrimary === 'STRENGTH') {
+      // If strength is a hero's primary attribute, every point in strength increases his or her attack damage by 1.
+      hero.attackDamageMinLevelX = hero.attackDamageMin + hero.attributeStrengthLevelX;
+      hero.attackDamageMaxLevelX = hero.attackDamageMax + hero.attributeStrengthLevelX;
+    } else if (hero.attributePrimary === 'AGILITY') {
+      // If agility is a hero's primary attribute, every point in agility increases his or her attack damage by 1
+      hero.attackDamageMinLevelX = hero.attackDamageMin + hero.attributeAgilityLevelX;
+      hero.attackDamageMaxLevelX = hero.attackDamageMax + hero.attributeAgilityLevelX;
+    } else if (hero.attributePrimary === 'INTELLECT') {
+      // If intelligence is a hero's primary attribute, every point in intelligence increases his or her attack damage by 1.
+      hero.attackDamageMinLevelX = hero.attackDamageMin + hero.attributeIntelligenceLevelX;
+      hero.attackDamageMaxLevelX = hero.attackDamageMax + hero.attributeIntelligenceLevelX;
+    }
+    // Every point in strength increases maximum health by 20.
+    hero.statusHealthLevelX = hero.statusHealth + hero.attributeStrengthLevelX * 20;
+    // Every point in strength increases health regeneration by 0.03 HP per second.
+    hero.statusHealthRegenLevelX = hero.statusHealthRegen + hero.attributeStrengthLevelX * 0.03;
+    // Every point in agility increases a hero's armor by 1/7.
+    hero.armorPhysicalLevelX = hero.armorPhysical + hero.attributeAgilityLevelX / 7;
+    // Every point in agility increases a hero's attack speed by 1.
+    // TODO: Add this stat
+    // Every point in intelligence increases a hero's maximum Mana by 12.
+    hero.statusManaLevelX = hero.statusMana + hero.attributeIntelligenceLevelX * 12;
+    // Every point in intelligence increases a hero's mana regeneration by 0.04 mana per second.
+    hero.statusManaRegenLevelX = hero.statusManaRegen + hero.attributeIntelligenceLevelX * 0.04;
+    // Every point in intelligence increases a hero's spell damage by 0.0625%.
+    hero.magicalResistanceLevelX = hero.magicalResistance + hero.attributeIntelligenceLevelX * 0.00625;
+
+    this.setState({
+      hero: hero,
+      heroLevel: heroLevel
+    })
   }
 
   render() {
@@ -143,15 +202,22 @@ class HeroScene extends Component {
             <View style={styles.content_hero_stat}>
               <Text>Type: {this.state.hero.attributePrimary}</Text>
               <Text>Role: {this.state.hero.role}</Text>
-              <Text>Health: {this.state.hero.statusHealth} (+{this.state.hero.statusHealthRegen.toFixed(3)}/s)</Text>
-              <Text>Mana: {this.state.hero.statusMana} (+{this.state.hero.statusManaRegen.toFixed(3)}/s)</Text>
-              <Text>Armor Physical: {this.state.hero.armorPhysical.toFixed(3)}</Text>
-              <Text>Magical Resistance: {this.state.hero.magicalResistance.toFixed(3)}</Text>
-              <Text>Damage: {this.state.hero.attackDamageMin}-{this.state.hero.attackDamageMax}</Text>
+              <Text>Level {this.state.heroLevel}</Text>
+              <Slider
+                minimumValue={0}
+                maximumValue={25}
+                step={1}
+                onValueChange={(value) => this._onChangeValueLevelSlider(value)}
+              />
+              <Text>Health: {this.state.hero.statusHealthLevelX.toFixed(0)} (regen {this.state.hero.statusHealthRegenLevelX.toFixed(3)}/s)</Text>
+              <Text>Mana: {this.state.hero.statusManaLevelX.toFixed(0)} (regen {this.state.hero.statusManaRegenLevelX.toFixed(3)}/s)</Text>
+              <Text>Armor Physical: {this.state.hero.armorPhysicalLevelX.toFixed(3)}</Text>
+              <Text>Magical Resistance: {this.state.hero.magicalResistanceLevelX.toFixed(3)}</Text>
+              <Text>Damage: {this.state.hero.attackDamageMinLevelX.toFixed(0)}-{this.state.hero.attackDamageMaxLevelX.toFixed(0)}</Text>
               <Text>Range: {this.state.hero.attackRange}</Text>
-              <Text>Strenth: {this.state.hero.attributeBaseStrength} (+{this.state.hero.attributeStrengthGain})</Text>
-              <Text>Agility: {this.state.hero.attributeBaseAgility} (+{this.state.hero.attributeAgilityGain})</Text>
-              <Text>Intelligence: {this.state.hero.attributeBaseIntelligence} (+{this.state.hero.attributeIntelligenceGain})</Text>
+              <Text>Strenth (+{this.state.hero.attributeStrengthGain}/lvl): {this.state.hero.attributeStrengthLevelX.toFixed(0)}</Text>
+              <Text>Agility (+{this.state.hero.attributeAgilityGain}/lvl): {this.state.hero.attributeAgilityLevelX.toFixed(0)}</Text>
+              <Text>Intelligence (+{this.state.hero.attributeIntelligenceGain}/lvl): {this.state.hero.attributeIntelligenceLevelX.toFixed(0)}</Text>
               <Text>Move speed: {this.state.hero.movementSpeed}</Text>
               <Text>Vision (Day/Night): {this.state.hero.visionDaytimeRange}/{this.state.hero.visionNighttimeRange}</Text>
             </View>
