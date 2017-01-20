@@ -4,95 +4,48 @@
 
 import React, { Component } from 'react';
 import {
-  AppRegistry,
+  // AppRegistry,
   StyleSheet,
   Text,
-  TextInput,
+  // TextInput,
   TouchableHighlight,
   View,
   ScrollView,
-  ListView,
+  // ListView,
   Image,
   Alert,
   Navigator,
   AsyncStorage,
   // ActivityIndicator,
   // Modal,
-  Button,
+  // Button,
   ViewPagerAndroid,
 } from 'react-native';
+import {
+  Container,
+  Header,
+  Title,
+  Content,
+  Footer,
+  FooterTab,
+  Button,
+  Icon,
+  InputGroup,
+  Input,
+  // Text,
+  Card,
+  CardItem,
+  Tabs,
+  List,
+  ListItem,
+  Thumbnail,
+  H1,
+  H2,
+  H3
+} from 'native-base';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 3,
-    backgroundColor: '#FFFFFF',
-  },
 
-  top: {
-    // flex: 1,
-    height: 30,
-    flexDirection: 'row',
-    justifyContent: 'flex-end'
-  },
-
-  top_title: {
-    fontSize: 20,
-    textAlign: 'center',
-  },
-
-  content: {
-    flex: 1,
-    // height: 500,
-  },
-
-  content_navigation: {
-    // flex: 1,
-    height: 30,
-    // textAlign: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-around'
-  },
-
-  // bottom: {
-  //   // flex: 1,
-  //   height: 50,
-  //   position: 'absolute',
-  //   bottom: 0,
-  //   left: 0,
-  //   right: 0,
-  // },
-
-  // Show hero list in grid
-  item_list: {
-    // flex: 1,
-    padding: 12,
-    // height: 300,
-    // flexDirection: 'row',
-    // alignItems: 'center',
-    // flexWrap: 'wrap',
-    // justifyContent: 'space-around',
-    // overflow: 'hidden'
-  },
-
-  item_box: {
-    // width: 59,
-    height: 33,
-    // backgroundColor: 'red',
-    margin: 3,
-    // alignItems: 'stretch',
-    flexDirection: 'row',
-  },
-
-  item_image: {
-    // flex: 1,
-    width: 59,
-    height: 33
-  },
-
-  item_text: {
-    padding: 3,
-  }
 });
 
 var HERO_LIST_PAGE=0;
@@ -102,86 +55,66 @@ var ITEM_LIST_PAGE=1;
 class MainScene extends Component {
   constructor(props) {
     super(props);
-    // Setup data source for ListView
-    // Initialize with empty data
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
-    this._onPressIcon = this._onPressIcon.bind(this);
-    this._onPressIconHero = this._onPressIconHero.bind(this);
-    this._onPressIconItem = this._onPressIconItem.bind(this);
+    this.searchInput = null;
+
+    this._onPressItem = this._onPressItem.bind(this);
+    this._onPressButtonHero = this._onPressButtonHero.bind(this);
+    this._onPressButtonItem = this._onPressButtonItem.bind(this);
+    this._onChangeInputSearch = this._onChangeInputSearch.bind(this);
+    this._onPressButtonClearInput = this._onPressButtonClearInput.bind(this);
+    this._onPressNoButton = this._onPressNoButton.bind(this);
+    this._onPressYesButton = this._onPressYesButton.bind(this);
+    this._onPressButtonDownload = this._onPressButtonDownload.bind(this);
+
     this.state = {
-      modalVisisble: false,
-      // dataSource: ds.cloneWithRows([]),
-      // dataSourceHeroes: ds.cloneWithRows(this.props.heroes),
-      // dataSourceItems: ds.cloneWithRows(this.props.items),
-      // heroes:[],
-      // heroes_bio: {},
-      // item: [],
       heroes: this.props.heroes,
       items: this.props.items,
+      data: null,
       isHeroSelected: true,
       isItemSelected: false,
     };
   }
 
   componentWillMount() {
-    // console.log(this.state.heroes);
-    // console.log(this.state.items);
     var heroes = this.state.heroes;
     for (hero of heroes) {
       hero['visibility'] = true;
     }
+
     var items = this.state.items;
     for (item of items) {
       item['visibility'] = true;
     }
+
     this.setState({
       heroes: heroes,
-      items: items
+      items: items,
+      data: heroes
     });
   }
 
-  _onPressIcon(data) {
-    if (this.state.isHeroSelected == true) {
+  // Callback function when press any item of list
+  _onPressItem(data) {
+    if (this.state.isHeroSelected) {
       // Push Hero scene to stack of navigator with necessary data
       this.props.navigator.push({
-        scene_id: "HeroScene",
-        // heroes_bio: this.state.heroes_bio,
+        scene_id: 'HeroScene',
         selected_hero: data,
       });
-    } else if (this.state.isItemSelected == true) {
+    } else if (this.state.isItemSelected) {
       // Push Item scene to stack of navigator with necessary data
       this.props.navigator.push({
-        scene_id: "ItemScene",
+        scene_id: 'ItemScene',
         selected_item: data,
       });
-    } else {
-
     }
-  }
-
-  _onPressIconHero(data) {
-    // Push Hero scene to stack of navigator with necessary data
-    this.props.navigator.push({
-      scene_id: "HeroScene",
-      // heroes_bio: this.state.heroes_bio,
-      selected_hero: data,
-    });
-  }
-
-  _onPressIconItem(data) {
-    // Push Item scene to stack of navigator with necessary data
-    this.props.navigator.push({
-      scene_id: "ItemScene",
-      selected_item: data,
-    });
   }
 
   _onPressButtonHero() {
     this._onPressButtonClearInput();
-    this.viewPager.setPage(HERO_LIST_PAGE);
     this.setState({
-      // dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
+      data: this.state.heroes,
       isHeroSelected: true,
       isItemSelected: false,
     });
@@ -189,9 +122,8 @@ class MainScene extends Component {
 
   _onPressButtonItem() {
     this._onPressButtonClearInput();
-    this.viewPager.setPage(ITEM_LIST_PAGE);
     this.setState({
-      // dataSource: this.state.dataSource.cloneWithRows(this.state.items),
+      data: this.state.items,
       isHeroSelected: false,
       isItemSelected: true,
     });
@@ -203,7 +135,7 @@ class MainScene extends Component {
 
   _onPressYesButton() {
     this.props.navigator.replace({
-      scene_id: "StartingScene",
+      scene_id: 'StartingScene',
       force_update: true
     });
   }
@@ -211,7 +143,7 @@ class MainScene extends Component {
   _onPressButtonDownload() {
     Alert.alert(
       'DOTOWIKI',
-      'You want to re-download now, don\'t you?',
+      'You want to re-download data now, don\'t you?',
       [
         {text: 'No', onPress: () => this._onPressNoButton()},
         {text: 'Yes', onPress: () => this._onPressYesButton()},
@@ -220,77 +152,9 @@ class MainScene extends Component {
         cancelable: false
       }
     );
-
-    return;
-
-    var counter = 2;
-
-    this.setState({
-      modalVisisble: true
-    });
-
-    console.log("Downloading heroes data from https://dotowiki.herokuapp.com/dotowiki_heroes.json");
-    try {
-      fetch("https://dotowiki.herokuapp.com/dotowiki_heroes.json", {method: "GET"})
-      .then((response) => response.json())
-      .then((data) => {
-        Alert.alert("Downloading heroes is done!");
-        this.setState({
-          heroes: data,
-        });
-        console.log(data);
-
-        AsyncStorage.setItem("dotowiki_heroes.json", JSON.stringify(data));
-
-        this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
-        });
-
-        counter--;
-        if (counter === 0) {
-          this.setState({
-            modalVisisble: false
-          });
-        }
-      })
-      .catch((error) => console.log(error));
-    } catch (error) {
-      Alert.alert("Downloading heroes is failed!");
-      console.log(error);
-    }
-
-    console.log("Downloading items from https://dotowiki.herokuapp.com/dotowiki_items.json");
-    try {
-      fetch("https://dotowiki.herokuapp.com/dotowiki_items.json", {method: "GET"})
-      .then((response) => response.json())
-      .then((data) => {
-        Alert.alert("Downloading items is done!");
-        this.setState({
-          items: data,
-        });
-        console.log(data);
-
-        AsyncStorage.setItem("dotowiki_items.json", JSON.stringify(data));
-
-        // this.setState({
-        //   dataSource: this.state.dataSource.cloneWithRows(this.state.items),
-        // });
-        counter--;
-        if (counter === 0) {
-          this.setState({
-            modalVisisble: false
-          });
-        }
-      })
-      .catch((error) => console.log(error));
-    } catch (error) {
-      Alert.alert("Downloading items is failed!");
-      console.log(error);
-    }
   }
 
   _onChangeInputSearch(text) {
-    // console.log(text);
     if (this.state.isHeroSelected) {
       var heroes = this.state.heroes;
       for (var hero of heroes) {
@@ -319,132 +183,55 @@ class MainScene extends Component {
   }
 
   _onPressButtonClearInput() {
-    this.searchInput.clear();
-    this._onChangeInputSearch("");
-  }
-
-  _onPageSelected(event) {
-    this._onPressButtonClearInput();
-    if (event.nativeEvent.position === HERO_LIST_PAGE) {
-      this.setState({
-        isHeroSelected: true,
-        isItemSelected: false,
-      });
-    } else if (event.nativeEvent.position === ITEM_LIST_PAGE) {
-      this.setState({
-        isHeroSelected: false,
-        isItemSelected: true,
-      });
-    }
+    this.searchInput._root.clear();
+    this._onChangeInputSearch('');
   }
 
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.top}>
-          <View style={{
-            flex: 5,
-            justifyContent: 'center'
-          }}><Text style={{
-            textAlign: 'center',
-            fontSize: 20,
-            padding: 3
-          }}>
-            DOTOWIKI
-          </Text></View>
-          <View style={{
-            flex: 2
-          }}><Button
-            title="Download"
-            onPress={() => this._onPressButtonDownload()}
-          /></View>
-        </View>
-        <View style={styles.content}>
-          <View style={styles.content_navigation}>
-            <TouchableHighlight onPress={() => this._onPressButtonHero()}>
-              <Text style={{fontSize: 18}}>Hero</Text>
-            </TouchableHighlight>
-            <TouchableHighlight onPress={() => this._onPressButtonItem()}>
-              <Text style={{fontSize: 18}}>Item</Text>
-            </TouchableHighlight>
-          </View>
-          <View style={{flex: 1}}>
-            <ViewPagerAndroid
-              style={{flex: 1}}
-              ref={(viewPager) => {this.viewPager = viewPager;}}
-              onPageSelected={(event) => this._onPageSelected(event)}
-            >
-              <View>
-                <ScrollView>
-                  {
-                    this.state.heroes.map((hero, index) => {
-                      if (hero.visibility) {
-                        return (
-                          <View key={hero.short_name} style={styles.item_box}>
-                            <TouchableHighlight onPress={() => this._onPressIconHero(hero)}>
-                              <Image
-                                source={{uri: hero.icon_url}}
-                                style={styles.item_image}
-                              />
-                            </TouchableHighlight>
-                            <TouchableHighlight onPress={() => this._onPressIconHero(hero)}>
-                              <Text style={styles.item_text}>{hero.localized_name}</Text>
-                            </TouchableHighlight>
-                          </View>
-                        );
-                      } else {
-                        return(<View key={hero.short_name}></View>);
-                      }
-                    })
-                  }
-                </ScrollView>
-              </View>
-              <View>
-                <ScrollView>
-                  {
-                    this.state.items.map((item, index) => {
-                      // Only render items whose cost is greater than 0 (no need recipe)
-                      if (Number(item.cost) > 0 || item.cost === undefined) {
-                        if (item.visibility) {
-                          return (
-                            <View key={item.short_name} style={styles.item_box}>
-                              <TouchableHighlight onPress={() => this._onPressIconItem(item)}>
-                                <Image
-                                  source={{uri: item.icon_url}}
-                                  style={styles.item_image}
-                                />
-                              </TouchableHighlight>
-                              <TouchableHighlight onPress={() => this._onPressIconItem(item)}>
-                                <Text style={styles.item_text}>{item.localized_name}</Text>
-                              </TouchableHighlight>
-                            </View>
-                          );
-                        } else {
-                          return(<View key={item.short_name}></View>);
-                        }
-                      } else {
-                        return(<View key={item.short_name}></View>);
-                      }
-                    })
-                  }
-                </ScrollView>
-              </View>
-            </ViewPagerAndroid>
-          </View>
-          <View style={{flexDirection: 'row'}}>
-            <TextInput
-              ref={(searchInput) => this.searchInput = searchInput}
-              style={{flex: 10}}
-              placeholder="Type to start searching..."
+      <Container style={{backgroundColor: '#FFFFFF'}}>
+        <Header searchBar>
+          <InputGroup>
+            <Icon name='ios-close-outline' onPress={() => this._onPressButtonClearInput()}/>
+            <Input
+              ref={(c) => this.searchInput = c}
+              placeholder="Search"
               onChangeText={(text) => this._onChangeInputSearch(text)}
             />
-            <Button
-              title="Clear"
-              onPress={() => this._onPressButtonClearInput()}
-            />
-          </View>
-        </View>
-      </View>
+            <Icon name='ios-download-outline' onPress={() => this._onPressButtonDownload()}/>
+          </InputGroup>
+        </Header>
+
+        <Content>
+          <List>
+          {
+            this.state.data.map((item, index) => {
+              if (item.visibility) {
+                return (
+                  <ListItem key={item.short_name} onPress={() => this._onPressItem(item)}>
+                    <Thumbnail source={{uri: item.icon_url}} size={35}/>
+                    <Text>{item.localized_name}</Text>
+                  </ListItem>
+                );
+              } else {
+                return(null);
+              }
+            })
+          }
+          </List>
+        </Content>
+
+        <Footer>
+          <FooterTab>
+            <Button active={this.state.isHeroSelected} onPress={() => this._onPressButtonHero()}>
+              Hero
+            </Button>
+            <Button active={this.state.isItemSelected} onPress={() => this._onPressButtonItem()}>
+              Item
+            </Button>
+          </FooterTab>
+        </Footer>
+      </Container>
     );
   }
 }

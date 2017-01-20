@@ -11,9 +11,36 @@ import {
   View,
   ScrollView,
   Image,
-  Button,
+  // Button,
   Slider
 } from 'react-native';
+import {
+  Container,
+  Header,
+  Title,
+  Content,
+  Footer,
+  FooterTab,
+  Button,
+  Icon,
+  InputGroup,
+  Input,
+  // Text,
+  Card,
+  CardItem,
+  Tabs,
+  List,
+  ListItem,
+  Thumbnail,
+  H1,
+  H2,
+  H3
+} from 'native-base';
+import {
+  Col,
+  Row,
+  Grid
+} from 'react-native-easy-grid';
 
 const styles = StyleSheet.create({
   container: {
@@ -95,35 +122,6 @@ class HeroScene extends Component {
     hero["armorPhysicalLevelX"] = hero.armorPhysical;
     hero["magicalResistanceLevelX"] = hero.magicalResistance;
 
-    // // Based on primary attribute, calculate stats at level 1
-    // if (hero.attributePrimary === 'STRENGTH') {
-    //   // If strength is a hero's primary attribute, every point in strength increases his or her attack damage by 1.
-    //   hero.attackDamageMinLevelX = hero.attackDamageMin + hero.attributeStrengthLevelX;
-    //   hero.attackDamageMaxLevelX = hero.attackDamageMax + hero.attributeStrengthLevelX;
-    // } else if (hero.attributePrimary === 'AGILITY') {
-    //   // If agility is a hero's primary attribute, every point in agility increases his or her attack damage by 1
-    //   hero.attackDamageMinLevelX = hero.attackDamageMin + hero.attributeAgilityLevelX;
-    //   hero.attackDamageMaxLevelX = hero.attackDamageMax + hero.attributeAgilityLevelX;
-    // } else if (hero.attributePrimary === 'INTELLECT') {
-    //   // If intelligence is a hero's primary attribute, every point in intelligence increases his or her attack damage by 1.
-    //   hero.attackDamageMinLevelX = hero.attackDamageMin + hero.attributeIntelligenceLevelX;
-    //   hero.attackDamageMaxLevelX = hero.attackDamageMax + hero.attributeIntelligenceLevelX;
-    // }
-    // // Every point in strength increases maximum health by 20.
-    // hero.statusHealthLevelX = hero.statusHealth + hero.attributeStrengthLevelX * 20;
-    // // Every point in strength increases health regeneration by 0.03 HP per second.
-    // hero.statusHealthRegenLevelX = hero.statusHealthRegen + hero.attributeStrengthLevelX * 0.03;
-    // // Every point in agility increases a hero's armor by 1/7.
-    // hero.armorPhysicalLevelX = hero.armorPhysical + hero.attributeAgilityLevelX / 7;
-    // // Every point in agility increases a hero's attack speed by 1.
-    // // TODO: Add this stat
-    // // Every point in intelligence increases a hero's maximum Mana by 12.
-    // hero.statusManaLevelX = hero.statusMana + hero.attributeIntelligenceLevelX * 12;
-    // // Every point in intelligence increases a hero's mana regeneration by 0.04 mana per second.
-    // hero.statusManaRegenLevelX = hero.statusManaRegen + hero.attributeIntelligenceLevelX * 0.04;
-    // // Every point in intelligence increases a hero's spell damage by 0.0625%.
-    // hero.magicalResistanceLevelX = hero.magicalResistance + hero.attributeIntelligenceLevelX * 0.00625;
-
     this.setState({
       hero: hero
     });
@@ -186,101 +184,132 @@ class HeroScene extends Component {
     var theLastIndexOfNormalAbility = 0;
 
     return (
-      <View style={styles.container}>
-        <View style={styles.top}>
-          <Button
-            style={styles.top_button_back}
-            title="Back"
-            onPress={() => this._onPressBack()}
-          />
-          <Text style={styles.top_title}>{this.state.hero.localized_name} ({this.state.hero.team})</Text>
-        </View>
+      <Container style={{backgroundColor: '#FFFFFF'}}>
+        <Header>
+          <Button transparent>
+            <Icon
+              name='ios-arrow-back'
+              onPress={() => this._onPressBack()}
+            />
+          </Button>
+          <Title>{this.state.hero.localized_name}</Title>
+        </Header>
 
-        <View style={styles.content}>
-          <View style={styles.content_hero_image_and_stat}>
-            <Image source={{uri: this.state.hero.full_quality_vertical_portrait}} style={styles.content_hero_image}/>
-            <View style={styles.content_hero_stat}>
-              <Text>Type: {this.state.hero.attributePrimary}</Text>
-              <Text>Role: {this.state.hero.role}</Text>
-              <Text>Level {this.state.heroLevel}</Text>
-              <Slider
-                minimumValue={0}
-                maximumValue={25}
-                step={1}
-                onValueChange={(value) => this._onChangeValueLevelSlider(value)}
-              />
-              <Text>Health: {this.state.hero.statusHealthLevelX.toFixed(0)} (regen {this.state.hero.statusHealthRegenLevelX.toFixed(3)}/s)</Text>
-              <Text>Mana: {this.state.hero.statusManaLevelX.toFixed(0)} (regen {this.state.hero.statusManaRegenLevelX.toFixed(3)}/s)</Text>
-              <Text>Armor Physical: {this.state.hero.armorPhysicalLevelX.toFixed(3)}</Text>
-              <Text>Magical Resistance: {this.state.hero.magicalResistanceLevelX.toFixed(3)}</Text>
-              <Text>Damage: {this.state.hero.attackDamageMinLevelX.toFixed(0)}-{this.state.hero.attackDamageMaxLevelX.toFixed(0)}</Text>
-              <Text>Range: {this.state.hero.attackRange}</Text>
-              <Text>Strenth (+{this.state.hero.attributeStrengthGain}/lvl): {this.state.hero.attributeStrengthLevelX.toFixed(0)}</Text>
-              <Text>Agility (+{this.state.hero.attributeAgilityGain}/lvl): {this.state.hero.attributeAgilityLevelX.toFixed(0)}</Text>
-              <Text>Intelligence (+{this.state.hero.attributeIntelligenceGain}/lvl): {this.state.hero.attributeIntelligenceLevelX.toFixed(0)}</Text>
-              <Text>Move speed: {this.state.hero.movementSpeed}</Text>
-              <Text>Vision (Day/Night): {this.state.hero.visionDaytimeRange}/{this.state.hero.visionNighttimeRange}</Text>
-            </View>
-          </View>
-          <View style={styles.content_hero_abilities_and_lore}>
-            <ScrollView>
-              <Text>Abilities:</Text>
-              {
-                this.state.hero.abilities.map((ability, index) => {
-                  if (ability.name.toLowerCase().search("special_bonus_") === (-1)) {
-                    theLastIndexOfNormalAbility = index;
-                    if (ability.full_name) {
-                      return (
-                        <View style={styles.content_hero_abilities} key={ability.id}>
-                          <TouchableHighlight onPress={() => this._onPressAbility(ability)}>
-                            <Image
-                              source={{uri: ability.icon_url}}
-                              style={{
-                                height: 45,
-                                width: 45
-                              }}
-                            />
-                          </TouchableHighlight>
-                          <TouchableHighlight onPress={() => this._onPressAbility(ability)}>
-                            <Text>{ability.full_name}</Text>
-                          </TouchableHighlight>
-                        </View>
-                      );
-                    } else {
-                      return null;
-                    }
-                  }
-                })
-              }
-              <Text>Talent tree:</Text>
-              {
-                this.state.hero.abilities.map((ability, index) => {
-                  if (ability.name.toLowerCase().search("special_bonus_") !== (-1)) {
-                    var indexOfAbilityInTalentTree = index - theLastIndexOfNormalAbility;
-                    switch (indexOfAbilityInTalentTree) {
-                      case (1):
-                      case (3):
-                      case (5):
-                      case (7):
+        <Content>
+          <Grid>
+            <Row>
+              <Col style={{
+                width: 120,
+                alignItems: 'center'
+              }}>
+                <Image
+                  source={{uri: this.state.hero.portrait_url}}
+                  style={{
+                    width: 117,
+                    height: 136
+                }}/>
+              </Col>
+              <Col style={{
+                height: 320}}
+              >
+                <Text>{this.state.hero.team}</Text>
+                <Text>{this.state.hero.attributePrimary}</Text>
+                <Text>{this.state.hero.role}</Text>
+                <Text>Level {this.state.heroLevel}</Text>
+                <Slider
+                  minimumValue={0}
+                  maximumValue={25}
+                  step={1}
+                  onValueChange={(value) => this._onChangeValueLevelSlider(value)}
+                />
+                <Text>Health: {this.state.hero.statusHealthLevelX.toFixed(0)} (regen {this.state.hero.statusHealthRegenLevelX.toFixed(3)}/s)</Text>
+                <Text>Mana: {this.state.hero.statusManaLevelX.toFixed(0)} (regen {this.state.hero.statusManaRegenLevelX.toFixed(3)}/s)</Text>
+                <Text>Armor Physical: {this.state.hero.armorPhysicalLevelX.toFixed(3)}</Text>
+                <Text>Magical Resistance: {this.state.hero.magicalResistanceLevelX.toFixed(3)}</Text>
+                <Text>Damage: {this.state.hero.attackDamageMinLevelX.toFixed(0)}-{this.state.hero.attackDamageMaxLevelX.toFixed(0)}</Text>
+                <Text>Range: {this.state.hero.attackRange}</Text>
+                <Text>Strenth (+{this.state.hero.attributeStrengthGain}/lvl): {this.state.hero.attributeStrengthLevelX.toFixed(0)}</Text>
+                <Text>Agility (+{this.state.hero.attributeAgilityGain}/lvl): {this.state.hero.attributeAgilityLevelX.toFixed(0)}</Text>
+                <Text>Intelligence (+{this.state.hero.attributeIntelligenceGain}/lvl): {this.state.hero.attributeIntelligenceLevelX.toFixed(0)}</Text>
+                <Text>Move speed: {this.state.hero.movementSpeed}</Text>
+                <Text>Vision (Day/Night): {this.state.hero.visionDaytimeRange}/{this.state.hero.visionNighttimeRange}</Text>
+              </Col>
+            </Row>
+            <Row style={{flexDirection: 'row'}}>
+              <View>
+                <View>
+                {
+                  this.state.hero.abilities.map((ability, index) => {
+                    if (ability.name.toLowerCase().search("special_bonus_") === (-1)) {
+                      theLastIndexOfNormalAbility = index;
+                      if (ability.full_name) {
                         return (
-                          <View  key={this.state.hero.abilities[index].id + "_" + this.state.hero.abilities[index + 1].id}>
-                            <Text>
-                              Level {10 + 2.5 * (indexOfAbilityInTalentTree - 1)}: {this.state.hero.abilities[index].full_name} OR {this.state.hero.abilities[index + 1].full_name}
-                            </Text>
+                          <View style={styles.content_hero_abilities} key={ability.id}>
+                            <TouchableHighlight onPress={() => this._onPressAbility(ability)}>
+                              <Image
+                                source={{uri: ability.icon_url}}
+                                style={{
+                                  height: 45,
+                                  width: 45
+                                }}
+                              />
+                            </TouchableHighlight>
+                            <TouchableHighlight onPress={() => this._onPressAbility(ability)}>
+                              <Text>{ability.full_name}</Text>
+                            </TouchableHighlight>
                           </View>
                         );
-                      default:
+                      } else {
                         return null;
+                      }
                     }
+                  })
+                }
+                </View>
+                <View style={{flexDirection: 'column', justifyContent: 'flex-start'}}>
+                  <View style={{width: 65}}>
+                    <Image
+                      source={{uri: 'http://cdn.dota2.com/apps/dota2/images/700/gameplay/hero_tree_icon.png'}}
+                      style={{
+                        width: 61,
+                        height: 105
+                      }}
+                    />
+                  </View>
+                  <View>
+                  {
+                    this.state.hero.abilities.map((ability, index) => {
+                      if (ability.name.toLowerCase().search("special_bonus_") !== (-1)) {
+                        var indexOfAbilityInTalentTree = index - theLastIndexOfNormalAbility;
+                        switch (indexOfAbilityInTalentTree) {
+                          case (1):
+                          case (3):
+                          case (5):
+                          case (7):
+                            return (
+                              <View  key={this.state.hero.abilities[index].id + "_" + this.state.hero.abilities[index + 1].id}>
+                                <Text>
+                                  Level {10 + 2.5 * (indexOfAbilityInTalentTree - 1)}: {this.state.hero.abilities[index].full_name} OR {this.state.hero.abilities[index + 1].full_name}
+                                </Text>
+                              </View>
+                            );
+                          default:
+                            return null;
+                        }
+                      }
+                    })
                   }
-                })
-              }
-              <Text>Lore:</Text>
-              <Text>{this.state.hero.lore}</Text>
-            </ScrollView>
-          </View>
-        </View>
-      </View>
+                  </View>
+                </View>
+                <View>
+                  <Text>Lore:</Text>
+                  <Text>{this.state.hero.lore}</Text>
+                </View>
+              </View>
+            </Row>
+          </Grid>
+        </Content>
+      </Container>
     );
   }
 }

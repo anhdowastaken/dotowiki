@@ -9,9 +9,36 @@ import {
   Text,
   TouchableHighlight,
   View,
-  Button,
+  // Button,
   Image,
 } from 'react-native';
+import {
+  Container,
+  Header,
+  Title,
+  Content,
+  Footer,
+  FooterTab,
+  Button,
+  Icon,
+  InputGroup,
+  Input,
+  // Text,
+  Card,
+  CardItem,
+  Tabs,
+  List,
+  ListItem,
+  Thumbnail,
+  H1,
+  H2,
+  H3
+} from 'native-base';
+import {
+  Col,
+  Row,
+  Grid
+} from 'react-native-easy-grid';
 
 const styles = StyleSheet.create({
   container: {
@@ -63,29 +90,65 @@ class ItemScene extends Component {
 
   render() {
     return(
-      <View style={styles.container}>
-        <View style={styles.top}>
-          <Button
-            style={styles.top_button_back}
-            title="Back"
-            onPress={() => this._onPressBack()}
-          />
-          <Text style={styles.top_title}>{this.props.item.localized_name}</Text>
-        </View>
+      <Container style={{backgroundColor: '#FFFFFF'}}>
+        <Header>
+          <Button transparent>
+            <Icon
+              name='ios-arrow-back'
+              onPress={() => this._onPressBack()}
+            />
+          </Button>
+          <Title>{this.props.item.localized_name}</Title>
+        </Header>
 
-        <View style={styles.content}>
-          <Image source={{uri: this.props.item.portrait_url}} style={styles.item_image}/>
-          <Text>Cost: {this.props.item.cost} gold</Text>
-          <Text>Description:</Text>
-          <Text>{this.props.item.description}</Text>
-          <Text>Attribute:</Text>
-          <Text>{this.props.item.attribute}</Text>
-          <Text>Notes:</Text>
-          <Text>{this.props.item.notes}</Text>
-          <Text>Lore:</Text>
-          <Text>{this.props.item.lore}</Text>
-        </View>
-      </View>
+        <Content>
+          <Grid>
+            <Row>
+              <Col style={{
+                width: 90,
+                alignItems: 'center'
+              }}>
+                <Image
+                  source={{uri: this.props.item.portrait_url}}
+                  style={{
+                    width: 85,
+                    height: 64
+                }}/>
+              </Col>
+              <Col style={{height: 100}}>
+                <Text>{this.props.item.description}</Text>
+              </Col>
+            </Row>
+            <Row style={{flexDirection: 'row'}}>
+              <View>
+                <View>
+                  <Text>Cost: {this.props.item.cost} gold</Text>
+                </View>
+                <View>
+                  <Text>Attribute:</Text>
+                  <Text>{this.props.item.attribute}</Text>
+                </View>
+                <View>
+                  <Text>Manacost:</Text>
+                  <Text>{this.props.item.manacost}</Text>
+                </View>
+                <View>
+                  <Text>Cooldown:</Text>
+                  <Text>{this.props.item.cooldown}</Text>
+                </View>
+                <View>
+                  <Text>Notes:</Text>
+                  <Text>{this.props.item.notes}</Text>
+                </View>
+                <View>
+                  <Text>Lore:</Text>
+                  <Text>{this.props.item.lore}</Text>
+                </View>
+              </View>
+            </Row>
+          </Grid>
+        </Content>
+      </Container>
     );
   }
 }
