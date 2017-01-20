@@ -53,7 +53,7 @@ class ItemScene extends Component {
     this._onPressBack = this._onPressBack.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     // Do something
   }
 

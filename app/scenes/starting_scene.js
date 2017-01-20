@@ -137,7 +137,7 @@ class StartingScene extends Component {
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     // console.log(this.props.force_update);
     if (this.props.force_update) {
       this.downloadDataFromDotowikiServer();

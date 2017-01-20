@@ -124,7 +124,7 @@ class MainScene extends Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     // console.log(this.state.heroes);
     // console.log(this.state.items);
     var heroes = this.state.heroes;
