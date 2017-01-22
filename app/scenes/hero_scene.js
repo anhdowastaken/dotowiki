@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  Text as ReactText,
+  // Text as ReactNativeText,
   TouchableHighlight,
   TouchableOpacity,
   View,
@@ -241,7 +241,7 @@ class HeroScene extends Component {
                   if (ability.full_name) {
                     return (
                       <TouchableOpacity key={ability.id} onPress={() => this._onPressAbility(ability)}>
-                        <View style={{flexDirection: 'row'}}>
+                        <View style={{flexDirection: 'row', margin: 3}}>
                           <Image
                             source={{uri: ability.icon_url}}
                             style={{
@@ -249,7 +249,7 @@ class HeroScene extends Component {
                               width: 45
                             }}
                           />
-                          <ReactText style={{paddingLeft: 3, fontSize: 16}}>{ability.full_name}</ReactText>
+                          <Text style={{paddingLeft: 5}}>{ability.full_name}</Text>
                         </View>
                       </TouchableOpacity>
                     );
