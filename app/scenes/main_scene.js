@@ -56,11 +56,11 @@ class MainScene extends Component {
   constructor(props) {
     super(props);
 
-    this.searchInput = null;
+    this._content = null;
+    this._searchInput = null;
 
     this._onPressItem = this._onPressItem.bind(this);
-    this._onPressButtonHero = this._onPressButtonHero.bind(this);
-    this._onPressButtonItem = this._onPressButtonItem.bind(this);
+    this._onPressButtonHeroOrItem = this._onPressButtonHeroOrItem.bind(this);
     this._onChangeInputSearch = this._onChangeInputSearch.bind(this);
     this._onPressButtonClearInput = this._onPressButtonClearInput.bind(this);
     this._onPressNoButton = this._onPressNoButton.bind(this);
@@ -111,21 +111,20 @@ class MainScene extends Component {
     }
   }
 
-  _onPressButtonHero() {
+  _onPressButtonHeroOrItem(isHeroSelected, isItemSelected) {
     this._onPressButtonClearInput();
+    if (isHeroSelected){
+      this.setState({
+        data: this.state.heroes
+      });
+    } else if (isItemSelected){
+      this.setState({
+        data: this.state.items
+      });
+    }
     this.setState({
-      data: this.state.heroes,
-      isHeroSelected: true,
-      isItemSelected: false,
-    });
-  }
-
-  _onPressButtonItem() {
-    this._onPressButtonClearInput();
-    this.setState({
-      data: this.state.items,
-      isHeroSelected: false,
-      isItemSelected: true,
+      isHeroSelected: isHeroSelected,
+      isItemSelected: isItemSelected
     });
   }
 
@@ -183,8 +182,9 @@ class MainScene extends Component {
   }
 
   _onPressButtonClearInput() {
-    this.searchInput._root.clear();
+    this._searchInput._root.clear();
     this._onChangeInputSearch('');
+    this._content._root.scrollToPosition(0);
   }
 
   render() {
@@ -194,7 +194,7 @@ class MainScene extends Component {
           <InputGroup>
             <Icon name='ios-close-outline' onPress={() => this._onPressButtonClearInput()}/>
             <Input
-              ref={(c) => this.searchInput = c}
+              ref={(c) => this._searchInput = c}
               placeholder="Search"
               onChangeText={(text) => this._onChangeInputSearch(text)}
             />
@@ -202,7 +202,9 @@ class MainScene extends Component {
           </InputGroup>
         </Header>
 
-        <Content>
+        <Content
+          ref={(c) => this._content = c}
+        >
           <List>
           {
             this.state.data.map((item, index) => {
@@ -223,10 +225,10 @@ class MainScene extends Component {
 
         <Footer>
           <FooterTab>
-            <Button active={this.state.isHeroSelected} onPress={() => this._onPressButtonHero()}>
+            <Button active={this.state.isHeroSelected} onPress={() => this._onPressButtonHeroOrItem(true, false)}>
               Hero
             </Button>
-            <Button active={this.state.isItemSelected} onPress={() => this._onPressButtonItem()}>
+            <Button active={this.state.isItemSelected} onPress={() => this._onPressButtonHeroOrItem(false, true)}>
               Item
             </Button>
           </FooterTab>
