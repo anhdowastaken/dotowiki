@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  Text,
+  // Text,
   TouchableHighlight,
   View,
   // Button,
@@ -23,7 +23,7 @@ import {
   Icon,
   InputGroup,
   Input,
-  // Text,
+  Text,
   Card,
   CardItem,
   Tabs,
@@ -102,51 +102,48 @@ class ItemScene extends Component {
         </Header>
 
         <Content>
-          <Grid>
-            <Row>
-              <Col style={{
-                width: 90,
-                alignItems: 'center'
-              }}>
-                <Image
-                  source={{uri: this.props.item.portrait_url}}
-                  style={{
-                    width: 85,
-                    height: 64
-                }}/>
-              </Col>
-              <Col style={{height: 100}}>
-                <Text>{this.props.item.description}</Text>
-              </Col>
-            </Row>
-            <Row style={{flexDirection: 'row'}}>
-              <View>
-                <View>
-                  <Text>Cost: {this.props.item.cost} gold</Text>
-                </View>
-                <View>
-                  <Text>Attribute:</Text>
-                  <Text>{this.props.item.attribute}</Text>
-                </View>
-                <View>
-                  <Text>Manacost:</Text>
-                  <Text>{this.props.item.manacost}</Text>
-                </View>
-                <View>
-                  <Text>Cooldown:</Text>
-                  <Text>{this.props.item.cooldown}</Text>
-                </View>
-                <View>
-                  <Text>Notes:</Text>
-                  <Text>{this.props.item.notes}</Text>
-                </View>
-                <View>
-                  <Text>Lore:</Text>
-                  <Text>{this.props.item.lore}</Text>
-                </View>
-              </View>
-            </Row>
-          </Grid>
+          <Card>
+            <CardItem cardBody>
+              <Image style={{ resizeMode: 'contain' }} source={{uri: this.props.item.portrait_url}} />
+              <Text>{this.props.item.description}</Text>
+              <Text>{this.props.item.cost} gold</Text>
+            </CardItem>
+
+            <CardItem header>
+              <Text>ATTRIBUTE</Text>
+            </CardItem>
+            <CardItem>
+              <Text>{this.props.item.attribute}</Text>
+            </CardItem>
+
+            <CardItem header>
+              <Text>MANACOST</Text>
+            </CardItem>
+            <CardItem>
+              <Text>{this.props.item.manacost}</Text>
+            </CardItem>
+
+            <CardItem header>
+              <Text>COOLDOWN</Text>
+            </CardItem>
+            <CardItem>
+              <Text>{this.props.item.cooldown}</Text>
+            </CardItem>
+
+            <CardItem header>
+              <Text>NOTES</Text>
+            </CardItem>
+            <CardItem>
+              <Text>{this.props.item.notes}</Text>
+            </CardItem>
+
+            <CardItem header>
+              <Text>LORE</Text>
+            </CardItem>
+            <CardItem>
+              <Text>{this.props.item.lore}</Text>
+            </CardItem>
+          </Card>
         </Content>
       </Container>
     );

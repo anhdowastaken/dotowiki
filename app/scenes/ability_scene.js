@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  Text,
+  // Text,
   TouchableHighlight,
   View,
   // Button,
@@ -23,7 +23,7 @@ import {
   Icon,
   InputGroup,
   Input,
-  // Text,
+  Text,
   Card,
   CardItem,
   Tabs,
@@ -102,52 +102,54 @@ class AbilityScene extends Component {
         </Header>
 
         <Content>
-          <Grid>
-            <Row>
-              <Col style={{
-                width: 110,
-                alignItems: 'center'
-              }}>
-                <Image
-                  source={{uri: this.props.ability.portrait_url}}
-                  style={{
-                    width: 105,
-                    height: 105
-                }}/>
-              </Col>
-              <Col style={{height: 150}}>
-                <Text>{this.props.ability.description}</Text>
-              </Col>
-            </Row>
-            <Row style={{flexDirection: 'row'}}>
-              <View>
-                <View>
-                  <Text>Affects:</Text>
-                  <Text>{this.props.ability.affects}</Text>
-                </View>
-                <View>
-                  <Text>Damage:</Text>
-                  <Text>{this.props.ability.damage}</Text>
-                </View>
-                <View>
-                  <Text>Attribute:</Text>
-                  <Text>{this.props.ability.attribute}</Text>
-                </View>
-                <View>
-                  <Text>Cooldown and Manacost:</Text>
-                  <Text>{this.props.ability.cooldownAndManacost}</Text>
-                </View>
-                <View>
-                  <Text>Notes:</Text>
-                  <Text>{this.props.ability.notes}</Text>
-                </View>
-                <View>
-                  <Text>Lore:</Text>
-                  <Text>{this.props.ability.lore}</Text>
-                </View>
-              </View>
-            </Row>
-          </Grid>
+          <Card>
+            <CardItem cardBody>
+              <Image style={{ resizeMode: 'contain' }} source={{uri: this.props.ability.portrait_url}} />
+              <Text>{this.props.ability.description}</Text>
+            </CardItem>
+
+            <CardItem header>
+              <Text>AFFECTS</Text>
+            </CardItem>
+            <CardItem>
+              <Text>{this.props.ability.affects}</Text>
+            </CardItem>
+
+            <CardItem header>
+              <Text>DAMAGE</Text>
+            </CardItem>
+            <CardItem>
+              <Text>{this.props.ability.damage}</Text>
+            </CardItem>
+
+            <CardItem header>
+              <Text>ATTRIBUTE</Text>
+            </CardItem>
+            <CardItem>
+              <Text>{this.props.ability.attribute}</Text>
+            </CardItem>
+
+            <CardItem header>
+              <Text>COOLDOWN AND MANACOST</Text>
+            </CardItem>
+            <CardItem>
+              <Text>{this.props.ability.cooldownAndManacost}</Text>
+            </CardItem>
+
+            <CardItem header>
+              <Text>NOTES</Text>
+            </CardItem>
+            <CardItem>
+              <Text>{this.props.ability.notes}</Text>
+            </CardItem>
+
+            <CardItem header>
+              <Text>LORE</Text>
+            </CardItem>
+            <CardItem>
+              <Text>{this.props.ability.lore}</Text>
+            </CardItem>
+          </Card>
         </Content>
       </Container>
     );

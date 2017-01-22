@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import {
   // AppRegistry,
   StyleSheet,
-  Text,
+  // Text,
   // TextInput,
   TouchableHighlight,
   View,
@@ -32,7 +32,7 @@ import {
   Icon,
   InputGroup,
   Input,
-  // Text,
+  Text,
   Card,
   CardItem,
   Tabs,
