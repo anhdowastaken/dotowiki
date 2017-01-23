@@ -135,6 +135,10 @@ class HeroScene extends Component {
     // Every point in intelligence increases a hero's spell damage by 0.0625%.
     hero.magicalResistanceLevelX = hero.magicalResistance + hero.attributeIntelligenceLevelX * 0.00625;
 
+    hero.attributeStrengthLevelX = hero.attributeBaseStrength + hero.attributeStrengthGain * heroLevel;
+    hero.attributeAgilityLevelX = hero.attributeBaseAgility + hero.attributeAgilityGain * heroLevel;
+    hero.attributeIntelligenceLevelX = hero.attributeBaseIntelligence + hero.attributeIntelligenceGain * heroLevel;
+
     this.setState({
       hero: hero,
       heroLevel: heroLevel
@@ -158,11 +162,37 @@ class HeroScene extends Component {
 
         <Content>
           <Card>
-            <CardItem cardBody>
-              <Image style={{ resizeMode: 'contain' }} source={{uri: this.state.hero.portrait_url}} />
-                {/*<Text>{this.state.hero.team}</Text>*/}
-                <Text>{this.state.hero.attributePrimary}</Text>
-                <Text>{this.state.hero.role}</Text>
+            <CardItem>
+              <View style={{flexDirection: 'row'}}>
+                <Image style={{height: 272/2, width: 234/2, marginRight: 3}} source={{uri: this.state.hero.portrait_url}} />
+                <View>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  {
+                    this.state.hero.attributePrimary === 'STRENGTH' ?
+                      <Image source={require('./../images/icons/strength_primary.png')} style={{height: 40, width: 40, margin: 3}}/> :
+                      <Image source={require('./../images/icons/strength.png')} style={{height: 40, width: 40, margin: 3}}/>
+                  }
+                    <Text>{this.state.hero.attributeStrengthLevelX.toFixed(0)} (+{this.state.hero.attributeStrengthGain})</Text>
+                  </View>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  {
+                    this.state.hero.attributePrimary === 'AGILITY' ?
+                      <Image source={require('./../images/icons/agility_primary.png')} style={{height: 40, width: 40, margin: 3}}/> :
+                      <Image source={require('./../images/icons/agility.png')} style={{height: 40, width: 40, margin: 3}}/>
+                  }
+                    <Text>{this.state.hero.attributeAgilityLevelX.toFixed(0)} (+{this.state.hero.attributeAgilityGain})</Text>
+                  </View>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  {
+                    this.state.hero.attributePrimary === 'INTELLECT' ?
+                      <Image source={require('./../images/icons/intelligence_primary.png')} style={{height: 40, width: 40, margin: 3}}/> :
+                      <Image source={require('./../images/icons/intelligence.png')} style={{height: 40, width: 40, margin: 3}}/>
+                  }
+                    <Text>{this.state.hero.attributeIntelligenceLevelX.toFixed(0)} (+{this.state.hero.attributeIntelligenceGain})</Text>
+                  </View>
+                </View>
+              </View>
+              <View>
                 <Text>Level {this.state.heroLevel}</Text>
                 <Slider
                   minimumValue={0}
@@ -170,17 +200,23 @@ class HeroScene extends Component {
                   step={1}
                   onValueChange={(value) => this._onChangeValueLevelSlider(value)}
                 />
-                <Text>Health: {this.state.hero.statusHealthLevelX.toFixed(0)} (regen {this.state.hero.statusHealthRegenLevelX.toFixed(3)}/s)</Text>
-                <Text>Mana: {this.state.hero.statusManaLevelX.toFixed(0)} (regen {this.state.hero.statusManaRegenLevelX.toFixed(3)}/s)</Text>
-                <Text>Armor Physical: {this.state.hero.armorPhysicalLevelX.toFixed(3)}</Text>
-                <Text>Magical Resistance: {this.state.hero.magicalResistanceLevelX.toFixed(3)}</Text>
+
+                <Text>Health: {this.state.hero.statusHealthLevelX.toFixed(0)} (+{this.state.hero.statusHealthRegenLevelX.toFixed(3)}/s)</Text>
+                <Text>Mana: {this.state.hero.statusManaLevelX.toFixed(0)} (+{this.state.hero.statusManaRegenLevelX.toFixed(3)}/s)</Text>
                 <Text>Damage: {this.state.hero.attackDamageMinLevelX.toFixed(0)}-{this.state.hero.attackDamageMaxLevelX.toFixed(0)}</Text>
                 <Text>Range: {this.state.hero.attackRange}</Text>
-                <Text>Strenth (+{this.state.hero.attributeStrengthGain}/lvl): {this.state.hero.attributeStrengthLevelX.toFixed(0)}</Text>
-                <Text>Agility (+{this.state.hero.attributeAgilityGain}/lvl): {this.state.hero.attributeAgilityLevelX.toFixed(0)}</Text>
-                <Text>Intelligence (+{this.state.hero.attributeIntelligenceGain}/lvl): {this.state.hero.attributeIntelligenceLevelX.toFixed(0)}</Text>
                 <Text>Move speed: {this.state.hero.movementSpeed}</Text>
+                <Text>Armor Physical: {this.state.hero.armorPhysicalLevelX.toFixed(3)}</Text>
+                <Text>Magical Resistance: {this.state.hero.magicalResistanceLevelX.toFixed(3)}</Text>
                 <Text>Vision (Day/Night): {this.state.hero.visionDaytimeRange}/{this.state.hero.visionNighttimeRange}</Text>
+              </View>
+            </CardItem>
+
+            <CardItem header>
+              <Text>ROLE</Text>
+            </CardItem>
+            <CardItem>
+              <Text>{this.state.hero.role}</Text>
             </CardItem>
 
             <CardItem header>

@@ -227,9 +227,11 @@ class MainScene extends Component {
           <FooterTab>
             <Button active={this.state.isHeroSelected} onPress={() => this._onPressButtonHeroOrItem(true, false)}>
               Hero
+              <Icon name='ios-person-outline'/>
             </Button>
             <Button active={this.state.isItemSelected} onPress={() => this._onPressButtonHeroOrItem(false, true)}>
               Item
+              <Icon name='ios-construct-outline'/>
             </Button>
           </FooterTab>
         </Footer>
