@@ -41,37 +41,31 @@ import {
 } from 'react-native-easy-grid';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 3,
-    backgroundColor: '#FFFFFF',
-  },
 
- top: {
-    // flex: 1,
-    flexDirection: 'row',
-    height: 50,
-  },
-
-  top_button_back: {
-    flex: 1,
-  },
-
-  top_title: {
-    flex: 5,
-    fontSize: 20,
-    textAlign: 'center',
-  },
-
-  content: {
-    flex: 1,
-  },
-
-  ability_image: {
-    width: 85,
-    height: 64,
-  },
 });
+
+class AbilitySubItem extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    if (this.props.body && this.props.body !== '') {
+      return (
+        <View>
+          <CardItem header>
+            <Text>{this.props.header}</Text>
+          </CardItem>
+          <CardItem>
+            <Text>{this.props.body}</Text>
+          </CardItem>
+        </View>
+      );
+    } else {
+      return (null);
+    }
+  }
+}
 
 class AbilityScene extends Component {
   constructor(props) {
@@ -108,47 +102,17 @@ class AbilityScene extends Component {
               <Text>{this.props.ability.description}</Text>
             </CardItem>
 
-            <CardItem header>
-              <Text>AFFECTS</Text>
-            </CardItem>
-            <CardItem>
-              <Text>{this.props.ability.affects}</Text>
-            </CardItem>
+            <AbilitySubItem header={'AFFECTS'} body={this.props.ability.affects}></AbilitySubItem>
 
-            <CardItem header>
-              <Text>DAMAGE</Text>
-            </CardItem>
-            <CardItem>
-              <Text>{this.props.ability.damage}</Text>
-            </CardItem>
+            <AbilitySubItem header={'DAMAGE'} body={this.props.ability.damage}></AbilitySubItem>
 
-            <CardItem header>
-              <Text>ATTRIBUTE</Text>
-            </CardItem>
-            <CardItem>
-              <Text>{this.props.ability.attribute}</Text>
-            </CardItem>
+            <AbilitySubItem header={'ATTRIBUTE'} body={this.props.ability.attribute}></AbilitySubItem>
 
-            <CardItem header>
-              <Text>COOLDOWN AND MANACOST</Text>
-            </CardItem>
-            <CardItem>
-              <Text>{this.props.ability.cooldownAndManacost}</Text>
-            </CardItem>
+            <AbilitySubItem header={'COOLDOWN AND MANACOST'} body={this.props.ability.cooldownAndManacost}></AbilitySubItem>
 
-            <CardItem header>
-              <Text>NOTES</Text>
-            </CardItem>
-            <CardItem>
-              <Text>{this.props.ability.notes}</Text>
-            </CardItem>
+            <AbilitySubItem header={'NOTES'} body={this.props.ability.notes}></AbilitySubItem>
 
-            <CardItem header>
-              <Text>LORE</Text>
-            </CardItem>
-            <CardItem>
-              <Text>{this.props.ability.lore}</Text>
-            </CardItem>
+            <AbilitySubItem header={'LORE'} body={this.props.ability.lore}></AbilitySubItem>
           </Card>
         </Content>
       </Container>

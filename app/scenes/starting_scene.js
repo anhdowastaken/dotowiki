@@ -30,8 +30,6 @@ const styles = StyleSheet.create({
   activityIndicator: {
     alignItems: 'center',
     justifyContent: 'center',
-    // padding: 8,
-    // height: 80,
   }
 });
 

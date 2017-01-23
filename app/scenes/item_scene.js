@@ -41,37 +41,70 @@ import {
 } from 'react-native-easy-grid';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 3,
-    backgroundColor: '#FFFFFF',
-  },
 
- top: {
-    // flex: 1,
-    flexDirection: 'row',
-    height: 50,
-  },
-
-  top_button_back: {
-    flex: 1,
-  },
-
-  top_title: {
-    flex: 5,
-    fontSize: 20,
-    textAlign: 'center',
-  },
-
-  content: {
-    flex: 1,
-  },
-
-  item_image: {
-    width: 85,
-    height: 64,
-  },
 });
+
+class ItemSubItem extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    if (this.props.body && this.props.body !== '') {
+      return (
+        <View>
+          <CardItem header>
+            <Text>{this.props.header}</Text>
+          </CardItem>
+          <CardItem>
+            <Text>{this.props.body}</Text>
+          </CardItem>
+        </View>
+      );
+    } else {
+      return (null);
+    }
+  }
+}
+
+class ItemCostAndRequirements extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    if (this.props.components !== null && this.props.components.length > 0) {
+      return (
+        <View>
+          <CardItem header>
+            <Text>COST AND REQUIREMENTS</Text>
+          </CardItem>
+          <CardItem>
+            <View style={{flexDirection: 'row'}}>
+            {
+              this.props.components.map((component, index) => {
+                return (<Image key={index} source={{uri: component.icon_url}} style={{height:45, width: 45, marginRight: 3}}/>);
+              })
+            }
+            </View>
+            <Text>{this.props.cost} gold</Text>
+          </CardItem>
+        </View>
+      );
+    } else {
+      return (
+        <View>
+          <CardItem header>
+            <Text>COST</Text>
+          </CardItem>
+          <CardItem>
+            <Text>{this.props.cost} gold</Text>
+          </CardItem>
+        </View>
+      );
+    }
+  }
+}
 
 class ItemScene extends Component {
   constructor(props) {
@@ -106,43 +139,19 @@ class ItemScene extends Component {
             <CardItem cardBody>
               <Image style={{ resizeMode: 'contain' }} source={{uri: this.props.item.portrait_url}} />
               <Text>{this.props.item.description}</Text>
-              <Text>{this.props.item.cost} gold</Text>
             </CardItem>
 
-            <CardItem header>
-              <Text>ATTRIBUTE</Text>
-            </CardItem>
-            <CardItem>
-              <Text>{this.props.item.attribute}</Text>
-            </CardItem>
+            <ItemCostAndRequirements components={this.props.item.components} cost={this.props.item.cost}></ItemCostAndRequirements>
 
-            <CardItem header>
-              <Text>MANACOST</Text>
-            </CardItem>
-            <CardItem>
-              <Text>{this.props.item.manacost}</Text>
-            </CardItem>
+            <ItemSubItem header={'ATTRIBUTE'} body={this.props.item.attribute}></ItemSubItem>
 
-            <CardItem header>
-              <Text>COOLDOWN</Text>
-            </CardItem>
-            <CardItem>
-              <Text>{this.props.item.cooldown}</Text>
-            </CardItem>
+            <ItemSubItem header={'MANACOST'} body={this.props.item.manacost}></ItemSubItem>
 
-            <CardItem header>
-              <Text>NOTES</Text>
-            </CardItem>
-            <CardItem>
-              <Text>{this.props.item.notes}</Text>
-            </CardItem>
+            <ItemSubItem header={'COOLDOWN'} body={this.props.item.cooldown}></ItemSubItem>
 
-            <CardItem header>
-              <Text>LORE</Text>
-            </CardItem>
-            <CardItem>
-              <Text>{this.props.item.lore}</Text>
-            </CardItem>
+            <ItemSubItem header={'NOTES'} body={this.props.item.notes}></ItemSubItem>
+
+            <ItemSubItem header={'LORE'} body={this.props.item.lore}></ItemSubItem>
           </Card>
         </Content>
       </Container>

@@ -44,54 +44,7 @@ import {
 } from 'react-native-easy-grid';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 3,
-    backgroundColor: '#FFFFFF',
-  },
 
- top: {
-    // flex: 1,
-    flexDirection: 'row',
-    height: 50,
-  },
-
-  top_button_back: {
-    flex: 1,
-  },
-
-  top_title: {
-    flex: 5,
-    fontSize: 20,
-    textAlign: 'center',
-  },
-
-  content: {
-    flex: 1,
-  },
-
-  content_hero_image_and_stat: {
-    flex: 2,
-    flexDirection: 'row',
-  },
-
-  content_hero_image: {
-    padding: 3,
-    width: 117, // Origin 234
-    height: 136, // Origin 272
-  },
-
-  content_hero_stat: {
-    padding: 3,
-  },
-
-  content_hero_abilities_and_lore: {
-    flex: 3,
-  },
-
-  content_hero_abilities: {
-    flexDirection: 'row'
-  }
 });
 
 class HeroScene extends Component {
