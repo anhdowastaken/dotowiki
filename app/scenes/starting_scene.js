@@ -55,7 +55,7 @@ class StartingScene extends Component {
 
   _onPressNoButton() {
     // TODO: Only work with Android
-    // BackAndroid.exitApp();
+    BackAndroid.exitApp();
   }
 
   _onPressYesButton() {
@@ -94,9 +94,24 @@ class StartingScene extends Component {
           });
         }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        Alert.alert(
+          'DOTOWIKI',
+          'There are some problems with your connection. Please try again!',
+          [
+            {text: 'OK', onPress: () => {
+              // TODO: Only work with Android
+              BackAndroid.exitApp();
+            }}
+          ],
+          {
+            cancelable: false
+          }
+        );
+        console.log(error);
+      });
     } catch (error) {
-      Alert.alert("Downloading is failed!");
+      // Alert.alert("Downloading is failed!");
       console.log(error);
     }
 
@@ -130,9 +145,24 @@ class StartingScene extends Component {
         //   dataSource: this.state.dataSource.cloneWithRows(this.state.heroes),
         // });
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        Alert.alert(
+          'DOTOWIKI',
+          'There are some problems with your connection. Please try again!',
+          [
+            {text: 'OK', onPress: () => {
+              // TODO: Only work with Android
+              BackAndroid.exitApp();
+            }}
+          ],
+          {
+            cancelable: false
+          }
+        );
+        console.log(error);
+      });
     } catch (error) {
-      Alert.alert("Downloading heroes is failed!");
+      // Alert.alert("Downloading heroes is failed!");
       console.log(error);
     }
 
@@ -166,9 +196,24 @@ class StartingScene extends Component {
         //   dataSource: this.state.dataSource.cloneWithRows(this.state.items),
         // });
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        Alert.alert(
+          'DOTOWIKI',
+          'There are some problems with your connection. Please try again!',
+          [
+            {text: 'OK', onPress: () => {
+              // TODO: Only work with Android
+              BackAndroid.exitApp();
+            }}
+          ],
+          {
+            cancelable: false
+          }
+        );
+        console.log(error);
+      });
     } catch (error) {
-      Alert.alert("Downloading items is failed!");
+      // Alert.alert("Downloading items is failed!");
       console.log(error);
     }
   }
@@ -251,10 +296,22 @@ class StartingScene extends Component {
                           });
                         }
                       })
-                      .catch((error) => console.log(error));
+                      .catch((error) => {
+                        console.log(error);
+                        this.props.navigator.replace({
+                          scene_id: "MainScene",
+                          heroes: heroes,
+                          items: items
+                        });
+                      });
                     } catch (error) {
-                      Alert.alert("Downloading is failed!");
+                      // Alert.alert("Downloading is failed!");
                       console.log(error);
+                      this.props.navigator.replace({
+                        scene_id: "MainScene",
+                        heroes: heroes,
+                        items: items
+                      });
                     }
                   }
                 });
@@ -351,10 +408,22 @@ class StartingScene extends Component {
                           });
                         }
                       })
-                      .catch((error) => console.log(error));
+                      .catch((error) => {
+                        console.log(error);
+                        this.props.navigator.replace({
+                          scene_id: "MainScene",
+                          heroes: heroes,
+                          items: items
+                        });
+                      });
                     } catch (error) {
-                      Alert.alert("Downloading is failed!");
+                      // Alert.alert("Downloading is failed!");
                       console.log(error);
+                      this.props.navigator.replace({
+                        scene_id: "MainScene",
+                        heroes: heroes,
+                        items: items
+                      });
                     }
                   }
                 });
