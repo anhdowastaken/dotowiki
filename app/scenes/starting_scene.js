@@ -33,6 +33,16 @@ const styles = StyleSheet.create({
   }
 });
 
+// var heroes_json_url = 'https://dotowiki.herokuapp.com/dotowiki_heroes.json';
+// var items_json_url = 'https://dotowiki.herokuapp.com/dotowiki_items.json';
+// var last_update_json_url = 'https://dotowiki.herokuapp.com/last_update.json';
+var heroes_json_url = 'https://dotowiki-service.herokuapp.com/heroes';
+var items_json_url = 'https://dotowiki-service.herokuapp.com/items';
+var last_update_json_url = 'https://dotowiki-service.herokuapp.com/last_update';
+// var heroes_json_url = 'http://192.168.100.7:5000/dotowiki_heroes.json';
+// var items_json_url = 'http://192.168.100.7:5000/dotowiki_items.json';
+// var last_update_json_url = 'http://192.168.100.7:5000/last_update.json';
+
 class StartingScene extends Component {
   constructor(props) {
     super(props);
@@ -45,7 +55,7 @@ class StartingScene extends Component {
 
   _onPressNoButton() {
     // TODO: Only work with Android
-    BackAndroid.exitApp();
+    // BackAndroid.exitApp();
   }
 
   _onPressYesButton() {
@@ -53,7 +63,8 @@ class StartingScene extends Component {
   }
 
   downloadDataFromDotowikiServer() {
-    var counter = 2;
+    var counter = 3;
+    var lastUpdate = 0;
     var heroes = [];
     var items = [];
 
@@ -62,9 +73,36 @@ class StartingScene extends Component {
       downloadAnimating: true,
     });
 
-    console.log("Downloading heroes data from https://dotowiki.herokuapp.com/dotowiki_heroes.json");
+    console.log("Downloading data from " + last_update_json_url);
     try {
-      fetch("https://dotowiki.herokuapp.com/dotowiki_heroes.json", {method: "GET"})
+      fetch(last_update_json_url, {method: "GET"})
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        lastUpdate = data[0].last_update;
+
+        AsyncStorage.setItem("dotowiki_last_update", JSON.stringify(lastUpdate));
+        counter--;
+        if (counter === 0) {
+          this.setState({
+            downloadAnimating: false
+          });
+          this.props.navigator.replace({
+            scene_id: "MainScene",
+            heroes: heroes,
+            items: items
+          });
+        }
+      })
+      .catch((error) => console.log(error));
+    } catch (error) {
+      Alert.alert("Downloading is failed!");
+      console.log(error);
+    }
+
+    console.log("Downloading heroes data from " + heroes_json_url);
+    try {
+      fetch(heroes_json_url, {method: "GET"})
       .then((response) => response.json())
       .then((data) => {
         // Alert.alert("Downloading heroes is done!");
@@ -98,9 +136,9 @@ class StartingScene extends Component {
       console.log(error);
     }
 
-    console.log("Downloading items from https://dotowiki.herokuapp.com/dotowiki_items.json");
+    console.log("Downloading items from " + items_json_url);
     try {
-      fetch("https://dotowiki.herokuapp.com/dotowiki_items.json", {method: "GET"})
+      fetch(items_json_url, {method: "GET"})
       .then((response) => response.json())
       .then((data) => {
         // Alert.alert("Downloading items is done!");
@@ -164,11 +202,66 @@ class StartingScene extends Component {
           counter--;
           if (counter === 0) {
             if (didDataExisted === true) {
-              this.props.navigator.replace({
-                scene_id: "MainScene",
-                heroes: heroes,
-                items: items
-              });
+              // Check last update
+              try {
+                AsyncStorage.getItem("dotowiki_last_update")
+                .then((response) => {
+                  var needUpdate = false;
+                  if (response === null || Number.isNaN(response)) {
+
+                  } else {
+                    var lastUpdate = Number(response);
+
+                    try {
+                      fetch(last_update_json_url, {method: "GET"})
+                      .then((response) => response.json())
+                      .then((data) => {
+                        console.log(data[0].last_update);
+                        if (Number.isNaN(data[0].last_update)) {
+
+                        } else if (lastUpdate < Number(data[0].last_update)) {
+                          needUpdate = true;
+                        } else {
+
+                        }
+
+                        if (needUpdate) {
+                          Alert.alert(
+                            'DOTOWIKI',
+                            'There are new updates! Do you want to download now?',
+                            [
+                              {text: 'No', onPress: () => {
+                                this.props.navigator.replace({
+                                  scene_id: "MainScene",
+                                  heroes: heroes,
+                                  items: items
+                                });
+                              }},
+                              {text: 'Yes', onPress: () => this._onPressYesButton()},
+                            ],
+                            {
+                              cancelable: false
+                            }
+                          );
+                        } else {
+                          this.props.navigator.replace({
+                            scene_id: "MainScene",
+                            heroes: heroes,
+                            items: items
+                          });
+                        }
+                      })
+                      .catch((error) => console.log(error));
+                    } catch (error) {
+                      Alert.alert("Downloading is failed!");
+                      console.log(error);
+                    }
+                  }
+                });
+              } catch (error) {
+                // Error retrieving data
+                console.log(error);
+              }
             } else {
               Alert.alert(
                 'DOTOWIKI',
@@ -209,11 +302,66 @@ class StartingScene extends Component {
           counter--;
           if (counter === 0) {
             if (didDataExisted === true) {
-              this.props.navigator.replace({
-                scene_id: "MainScene",
-                heroes: heroes,
-                items: items
-              });
+              // Check last update
+              try {
+                AsyncStorage.getItem("dotowiki_last_update")
+                .then((response) => {
+                  var needUpdate = false;
+                  if (response === null || Number.isNaN(response)) {
+
+                  } else {
+                    var lastUpdate = Number(response);
+
+                    try {
+                      fetch(last_update_json_url, {method: "GET"})
+                      .then((response) => response.json())
+                      .then((data) => {
+                        console.log(data[0].last_update);
+                        if (Number.isNaN(data[0].last_update)) {
+
+                        } else if (lastUpdate < Number(data[0].last_update)) {
+                          needUpdate = true;
+                        } else {
+
+                        }
+
+                        if (needUpdate) {
+                          Alert.alert(
+                            'DOTOWIKI',
+                            'There are new updates! Do you want to download now?',
+                            [
+                              {text: 'No', onPress: () => {
+                                this.props.navigator.replace({
+                                  scene_id: "MainScene",
+                                  heroes: heroes,
+                                  items: items
+                                });
+                              }},
+                              {text: 'Yes', onPress: () => this._onPressYesButton()},
+                            ],
+                            {
+                              cancelable: false
+                            }
+                          );
+                        } else {
+                          this.props.navigator.replace({
+                            scene_id: "MainScene",
+                            heroes: heroes,
+                            items: items
+                          });
+                        }
+                      })
+                      .catch((error) => console.log(error));
+                    } catch (error) {
+                      Alert.alert("Downloading is failed!");
+                      console.log(error);
+                    }
+                  }
+                });
+              } catch (error) {
+                // Error retrieving data
+                console.log(error);
+              }
             } else {
               this.setState({
                 downloadAnimating: false
