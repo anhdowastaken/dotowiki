@@ -208,7 +208,11 @@ class MainScene extends Component {
           <List>
           {
             this.state.data.map((item, index) => {
-              if (item.visibility && (item.cost === undefined || (item.cost !== undefined && item.cost > 0))) {
+              if (item.visibility
+                && (item.cost === undefined
+                  || ((item.cost !== undefined && item.name.search('item_river_painter') === -1
+                    && (item.cost > 0 || (item.cost === 0 && item.isRecipe === false)))
+                    && (item.isRecipe !== undefined && item.isRecipe === false)))) {
                 return (
                   <ListItem key={item.short_name} onPress={() => this._onPressItem(item)}>
                     <Thumbnail source={{uri: item.icon_url}} size={35}/>

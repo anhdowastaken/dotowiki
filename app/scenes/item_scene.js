@@ -8,6 +8,7 @@ import {
   StyleSheet,
   // Text,
   TouchableHighlight,
+  TouchableOpacity,
   View,
   // Button,
   Image,
@@ -70,6 +71,15 @@ class ItemSubItem extends Component {
 class ItemCostAndRequirements extends Component {
   constructor(props) {
     super(props);
+
+    this._onPressItem = this._onPressItem.bind(this);
+  }
+
+  _onPressItem(item) {
+    this.props.navigator.push({
+      scene_id: 'ItemScene',
+      selected_item: item
+    });
   }
 
   render() {
@@ -83,7 +93,11 @@ class ItemCostAndRequirements extends Component {
             <View style={{flexDirection: 'row'}}>
             {
               this.props.components.map((component, index) => {
-                return (<Image key={index} source={{uri: component.icon_url}} style={{height:45, width: 45, marginRight: 3}}/>);
+                return (
+                  <TouchableOpacity key={index} onPress={() => this._onPressItem(component)}>
+                    <Image source={{uri: component.icon_url}} style={{height:45, width: 45, marginRight: 3}}/>
+                  </TouchableOpacity>
+                );
               })
             }
             </View>
@@ -141,7 +155,7 @@ class ItemScene extends Component {
               <Text>{this.props.item.description}</Text>
             </CardItem>
 
-            <ItemCostAndRequirements components={this.props.item.components} cost={this.props.item.cost}></ItemCostAndRequirements>
+            <ItemCostAndRequirements components={this.props.item.components} cost={this.props.item.cost} navigator={this.props.navigator}></ItemCostAndRequirements>
 
             <ItemSubItem header={'ATTRIBUTE'} body={this.props.item.attribute}></ItemSubItem>
 
