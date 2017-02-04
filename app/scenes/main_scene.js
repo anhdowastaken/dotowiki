@@ -66,10 +66,13 @@ class MainScene extends Component {
     this._onPressNoButton = this._onPressNoButton.bind(this);
     this._onPressYesButton = this._onPressYesButton.bind(this);
     this._onPressButtonDownload = this._onPressButtonDownload.bind(this);
+    this._onScrollContent = this._onScrollContent.bind(this);
 
     this.state = {
       heroes: this.props.heroes,
+      heroes_y: 0,
       items: this.props.items,
+      items_y: 0,
       data: null,
       isHeroSelected: true,
       isItemSelected: false,
@@ -112,15 +115,27 @@ class MainScene extends Component {
   }
 
   _onPressButtonHeroOrItem(isHeroSelected, isItemSelected) {
-    this._onPressButtonClearInput();
+    this._searchInput._root.clear();
+    this._onChangeInputSearch('');
+
     if (isHeroSelected){
       this.setState({
         data: this.state.heroes
       });
+      if (this.state.isHeroSelected) {
+        this._content._root.scrollToPosition(0);
+      } else {
+        this._content._root.scrollToPosition(0, this.state.heroes_y);
+      }
     } else if (isItemSelected){
       this.setState({
         data: this.state.items
       });
+      if (this.state.isItemSelected) {
+        this._content._root.scrollToPosition(0);
+      } else {
+        this._content._root.scrollToPosition(0, this.state.items_y);
+      }
     }
     this.setState({
       isHeroSelected: isHeroSelected,
@@ -187,6 +202,19 @@ class MainScene extends Component {
     this._content._root.scrollToPosition(0);
   }
 
+  _onScrollContent(event) {
+    // console.log(event.nativeEvent.contentOffset.y);
+    if (this.state.isHeroSelected) {
+      this.setState({
+        heroes_y: event.nativeEvent.contentOffset.y
+      });
+    } else if (this.state.isItemSelected) {
+      this.setState({
+        items_y: event.nativeEvent.contentOffset.y
+      });
+    }
+  }
+
   render() {
     return (
       <Container style={{backgroundColor: '#FFFFFF'}}>
@@ -204,6 +232,7 @@ class MainScene extends Component {
 
         <Content
           ref={(c) => this._content = c}
+          onScroll={(event) => {this._onScrollContent(event);}}
         >
           <List>
           {
