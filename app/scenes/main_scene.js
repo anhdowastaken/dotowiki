@@ -48,8 +48,10 @@ const styles = StyleSheet.create({
 
 });
 
-var HERO_LIST_PAGE=0;
-var ITEM_LIST_PAGE=1;
+var CATEGORY_HERO = 0;
+var CATEGORY_ITEM = 1;
+var CATEGORY_MATCH = 2;
+var CATEGORY_USER = 3;
 
 // NOTE: All React components must start with a upper case letter, or contain a dot.
 class MainScene extends Component {
@@ -60,7 +62,7 @@ class MainScene extends Component {
     this._searchInput = null;
 
     this._onPressItem = this._onPressItem.bind(this);
-    this._onPressButtonHeroOrItem = this._onPressButtonHeroOrItem.bind(this);
+    this._onPressButtonCategory = this._onPressButtonCategory.bind(this);
     this._onChangeInputSearch = this._onChangeInputSearch.bind(this);
     this._onPressButtonClearInput = this._onPressButtonClearInput.bind(this);
     this._onPressNoButton = this._onPressNoButton.bind(this);
@@ -74,8 +76,7 @@ class MainScene extends Component {
       items: this.props.items,
       items_y: 0,
       data: null,
-      isHeroSelected: true,
-      isItemSelected: false,
+      categorySeletected: CATEGORY_HERO
     };
   }
 
@@ -114,33 +115,42 @@ class MainScene extends Component {
     }
   }
 
-  _onPressButtonHeroOrItem(isHeroSelected, isItemSelected) {
+  _onPressButtonCategory(category) {
     this._searchInput._root.clear();
     this._onChangeInputSearch('');
 
-    if (isHeroSelected){
-      this.setState({
-        data: this.state.heroes
-      });
-      if (this.state.isHeroSelected) {
-        this._content._root.scrollToPosition(0);
-      } else {
-        this._content._root.scrollToPosition(0, this.state.heroes_y);
-      }
-    } else if (isItemSelected){
-      this.setState({
-        data: this.state.items
-      });
-      if (this.state.isItemSelected) {
-        this._content._root.scrollToPosition(0);
-      } else {
-        this._content._root.scrollToPosition(0, this.state.items_y);
-      }
+    switch (category) {
+      case (CATEGORY_HERO):
+        this.setState({
+          data: this.state.heroes
+        });
+        if (this.state.categorySeletected === category) {
+          this._content._root.scrollToPosition(0);
+        } else {
+          this._content._root.scrollToPosition(0, this.state.heroes_y);
+        }
+        break;
+      case (CATEGORY_ITEM):
+        this.setState({
+          data: this.state.items
+        });
+        if (this.state.categorySeletected === category) {
+          this._content._root.scrollToPosition(0);
+        } else {
+          this._content._root.scrollToPosition(0, this.state.items_y);
+        }
+        break;
+      case (CATEGORY_MATCH):
+        break;
+      case (CATEGORY_USER):
+        break;
+      default:
+        break;
     }
+
     this.setState({
-      isHeroSelected: isHeroSelected,
-      isItemSelected: isItemSelected
-    });
+      categorySeletected: category
+    })
   }
 
   _onPressNoButton() {
@@ -203,15 +213,23 @@ class MainScene extends Component {
   }
 
   _onScrollContent(event) {
-    // console.log(event.nativeEvent.contentOffset.y);
-    if (this.state.isHeroSelected) {
-      this.setState({
-        heroes_y: event.nativeEvent.contentOffset.y
-      });
-    } else if (this.state.isItemSelected) {
-      this.setState({
-        items_y: event.nativeEvent.contentOffset.y
-      });
+    switch (this.state.categorySeletected) {
+      case (CATEGORY_HERO):
+        this.setState({
+          heroes_y: event.nativeEvent.contentOffset.y
+        });
+        break;
+      case (CATEGORY_ITEM):
+        this.setState({
+          items_y: event.nativeEvent.contentOffset.y
+        });
+        break;
+      case (CATEGORY_MATCH):
+        break;
+      case (CATEGORY_USER):
+        break;
+      default:
+        break;
     }
   }
 
@@ -258,11 +276,11 @@ class MainScene extends Component {
 
         <Footer>
           <FooterTab>
-            <Button active={this.state.isHeroSelected} onPress={() => this._onPressButtonHeroOrItem(true, false)}>
+            <Button active={this.state.categorySeletected === CATEGORY_HERO ? true : false} onPress={() => this._onPressButtonCategory(CATEGORY_HERO)}>
               Hero
               <Icon name='ios-person-outline'/>
             </Button>
-            <Button active={this.state.isItemSelected} onPress={() => this._onPressButtonHeroOrItem(false, true)}>
+            <Button active={this.state.categorySeletected === CATEGORY_ITEM ? true : false} onPress={() => this._onPressButtonCategory(CATEGORY_ITEM)}>
               Item
               <Icon name='ios-construct-outline'/>
             </Button>
