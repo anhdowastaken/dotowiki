@@ -100,18 +100,27 @@ class MainScene extends Component {
 
   // Callback function when press any item of list
   _onPressItem(data) {
-    if (this.state.isHeroSelected) {
-      // Push Hero scene to stack of navigator with necessary data
-      this.props.navigator.push({
-        scene_id: 'HeroScene',
-        selected_hero: data,
-      });
-    } else if (this.state.isItemSelected) {
-      // Push Item scene to stack of navigator with necessary data
-      this.props.navigator.push({
-        scene_id: 'ItemScene',
-        selected_item: data,
-      });
+    switch (this.state.categorySeletected) {
+      case (CATEGORY_HERO):
+        // Push Hero scene to stack of navigator with necessary data
+        this.props.navigator.push({
+          scene_id: 'HeroScene',
+          selected_hero: data,
+        });
+        break;
+      case (CATEGORY_ITEM):
+        // Push Item scene to stack of navigator with necessary data
+        this.props.navigator.push({
+          scene_id: 'ItemScene',
+          selected_item: data,
+        });
+        break;
+      case (CATEGORY_MATCH):
+        break;
+      case (CATEGORY_USER):
+        break;
+      default:
+        break;
     }
   }
 
