@@ -188,30 +188,39 @@ class MainScene extends Component {
   }
 
   _onChangeInputSearch(text) {
-    if (this.state.isHeroSelected) {
-      var heroes = this.state.heroes;
-      for (var hero of heroes) {
-        if (hero.localized_name.toLowerCase().search(text.toLowerCase()) === (-1)) {
-          hero.visibility = false;
-        } else {
-          hero.visibility = true;
+    switch (this.state.categorySeletected) {
+      case (CATEGORY_HERO):
+        var heroes = this.state.heroes;
+        for (var hero of heroes) {
+          if (hero.localized_name.toLowerCase().search(text.toLowerCase()) === (-1)) {
+            hero.visibility = false;
+          } else {
+            hero.visibility = true;
+          }
         }
-      }
-      this.setState({
-        heroes: heroes
-      });
-    } else if (this.state.isItemSelected) {
-      var items = this.state.items;
-      for (var item of items) {
-        if (item.localized_name.toLowerCase().search(text.toLowerCase()) === (-1)) {
-          item.visibility = false;
-        } else {
-          item.visibility = true;
+        this.setState({
+          heroes: heroes
+        });
+        break;
+      case (CATEGORY_ITEM):
+        var items = this.state.items;
+        for (var item of items) {
+          if (item.localized_name.toLowerCase().search(text.toLowerCase()) === (-1)) {
+            item.visibility = false;
+          } else {
+            item.visibility = true;
+          }
         }
-      }
-      this.setState({
-        items: items
-      });
+        this.setState({
+          items: items
+        });
+        break;
+      case (CATEGORY_MATCH):
+        break;
+      case (CATEGORY_USER):
+        break;
+      default:
+        break;
     }
   }
 
